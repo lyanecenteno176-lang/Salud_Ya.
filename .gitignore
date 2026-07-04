@@ -1,0 +1,5 @@
+# Archivos a ignorar
+settings.py
+__pycache__/
+db.sqlite3
+.env
