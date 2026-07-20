@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaludYa - Comenzar mi Rutina</title>
+    <!-- Reutilizamos el mismo CSS para mantener los colores y estilos consistentes -->
+    <link rel="stylesheet" href="styles.css"> 
+</head>
+<body class="body-registro">
+
+    <div class="container-registro">
+        <div class="card-registro">
+            <h2 class="form-title">¡Te damos la bienvenida a <span>SaludYa</span>!</h2>
+            <p class="form-subtitle">Queremos conocerte un poco mejor para personalizar tus hábitos.</p>
+            
+            <!-- Formulario -->
+            <form id="formRegistro">
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" placeholder="Ej. Juan" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" id="apellido" placeholder="Ej. Pérez" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Número Telefónico</label>
+                    <input type="tel" id="telefono" placeholder="Ej. 8888-8888" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico</label>
+                    <input type="email" id="correo" placeholder="ejemplo@correo.com" required>
+                </div>
+
+                <!-- Botón personalizado y empático -->
+                <button type="submit" class="btn-submit">Empezar a cuidarme</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script para simular el login y regresar -->
+    <script>
+        document.getElementById('formRegistro').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita que la página se recargue de golpe
+            
+            // Capturamos el nombre de manera humana para darle una bienvenida personalizada
+            const nombreUsuario = document.getElementById('nombre').value;
+            
+            // Guardamos el nombre temporalmente en el navegador
+            localStorage.setItem('usuarioSaludYa', nombreUsuario);
+            
+            alert('¡Registro exitoso! Qué alegría tenerte aquí, ' + nombreUsuario + '. :D');
+            
+            // Redirige automáticamente a la página principal
+            window.location.href = 'index.html';
+        });
+    </script>
+
+</body>
+</html>

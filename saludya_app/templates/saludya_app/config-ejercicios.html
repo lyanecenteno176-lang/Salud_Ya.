@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SaludYa - Pausas Activas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body style="background-color: var(--bg-light); padding: 3rem 0;">
+    <script>
+        // Bloqueo de seguridad: Verificar si el usuario ha iniciado sesión
+        const usuarioActivo = localStorage.getItem('usuarioSaludYa');
+        if (!usuarioActivo) {
+            alert('Acceso restringido. Por favor, inicia sesión o regístrate presionando "Cuidar de mi hoy" para personalizar tus hábitos.');
+            window.location.href = 'Index.Html'; // Redirige de inmediato al inicio
+        }
+    </script>
+    <div class="container" style="max-width: 600px; background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
+        <h2 style="color: var(--secondary-color); margin-bottom: 1rem;">🧘 Rutinas de Pausas Activas</h2>
+        
+        <div style="background-color: #e0f2f1; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+            <h4 style="color: var(--secondary-color);">💡 Recomendación del día para mitigar el estrés académico:</h4>
+            <p style="font-size: 0.95rem; margin-top: 0.5rem;"><strong>Estiramiento de cuello y hombros:</strong> Gira la cabeza suavemente hacia la izquierda durante 10 segundos y luego cambia a la derecha. Ayuda a liberar la tensión acumulada por estar frente a la laptop.</p>
+        </div>
+
+        <form onsubmit="alert('¡Tiempo de pausa programado!'); window.location.href='index.html'; return false;">
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label style="font-weight: 600; display:block; margin-bottom: .5rem;">¿Cada cuánto tiempo harás una pausa?</label>
+                <select style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
+                    <option value="45">Cada 45 minutos de estudio/trabajo</option>
+                    <option value="90">Cada 90 minutos</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-main" style="border: none; width: 100%; padding: 1rem; border-radius: 10px; cursor: pointer;">Programar Pausa</button>
+        </form>
+    </div>
+</body>
+</html>
