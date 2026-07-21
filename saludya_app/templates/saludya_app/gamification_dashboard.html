@@ -45,7 +45,7 @@
                     <span style="color: #555;">{{ profile.next_badge_target }} pts</span>
                 </div>
                 <div style="height: 18px; width: 100%; border-radius: 999px; background: #e6f4f2; overflow: hidden;">
-                    <div style="width: {{ profile.points_total|floatformat:0|divisibleby:profile.next_badge_target|yesno:'100%,0%' }}; background: linear-gradient(90deg, #2ec4b6, #0d2c34); height: 100%;"></div>
+                    <div style="width: {{ badge_progress }}%; background: linear-gradient(90deg, #2ec4b6, #0d2c34); height: 100%; transition: width 0.3s ease;"></div>
                 </div>
                 <p style="margin-top: 0.9rem; color: #555;">Sigue completando hábitos para desbloquear tu próxima recompensa.</p>
             </div>
