@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SaludYa - Comenzar mi Rutina</title>
-    <!-- Reutilizamos el mismo CSS para mantener los colores y estilos consistentes -->
-    <link rel="stylesheet" href="styles.css"> 
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
 </head>
 <body class="body-registro">
 
@@ -56,7 +56,7 @@
             alert('¡Registro exitoso! Qué alegría tenerte aquí, ' + nombreUsuario + '. :D');
             
             // Redirige automáticamente a la página principal
-            window.location.href = 'index.html';
+            window.location.href = '{% url 'index' %}';
         });
     </script>
 

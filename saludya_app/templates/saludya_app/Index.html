@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SaludYa - Tu Compañero de Bienestar Diario</title>
-    <link rel="stylesheet" href="styles.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
 </head>
 <body>
 
     <header class="main-header">
         <div class="container header-container">
-            <h1 class="logo" onclick="window.location.href='Index.Html'" style="cursor: pointer;">Salud<span>Ya</span></h1>
+            <h1 class="logo" onclick="window.location.href='{% url 'index' %}'" style="cursor: pointer;">Salud<span>Ya</span></h1>
             
             <nav class="main-nav">
                 <a href="#inicio">Inicio</a>
                 <a href="#funciones">Funciones</a>
                 
                 <span id="nav-invitado">
-                    <button onclick="window.location.href='registro.html'" class="btn-primary" style="cursor: pointer; border: none;">Probar App</button>
+            <button onclick="window.location.href='{% url 'registro' %}'" class="btn-primary" style="cursor: pointer; border: none;">Probar App</button>
                 </span>
 
                 <span id="nav-usuario" style="display: none; margin-left: 15px;">
@@ -33,7 +34,7 @@
             <h2>Pequeñas acciones constantes para una vida más saludable</h2>
             <p>SaludYa te ayuda a mantener el control de tu bienestar diario con recordatorios amigables y personalizados. ¡Prevenir es cuidar de ti!</p>
             <div class="hero-buttons">
-                <button onclick="window.location.href='registro.html'" class="btn-main" style="cursor: pointer;">Cuidar de mi hoy.</button>
+                <button onclick="window.location.href='{% url 'registro' %}'" class="btn-main" style="cursor: pointer;">Cuidar de mi hoy.</button>
                 <a href="#funciones" class="btn-secondary">Saber Más</a>
             </div>
         </div>
@@ -48,21 +49,21 @@
                     <div class="icon">💧</div>
                     <h4>Tu momento de hidratación</h4>
                     <p>Un trago de agua te devuelve la energía. Te avisamos suavemente para que nunca te falte.</p>
-                    <button onclick="window.location.href='config-agua.html'" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Ajustar Recordatorio</button>
+                    <button onclick="window.location.href='{% url 'config_agua' %}'" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Ajustar Recordatorio</button>
                 </div>
 
                 <div class="feature-card">
                     <div class="icon">🧘</div>
                     <h4>Pausas Activas</h4>
                     <p>Ejercicios breves y estiramientos para cuidar tu bienestar físico y mental durante el día.</p>
-                    <button onclick="window.location.href='config-ejercicios.html'" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Ver Ejercicios</button>
+                    <button onclick="window.location.href='{% url 'config_ejercicios' %}'" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Ver Ejercicios</button>
                 </div>
 
                 <div class="feature-card">
                     <div class="icon">💊</div>
                     <h4>Control de Medicamentos</h4>
                     <p>Evita olvidos importantes con notificaciones oportunas y un seguimiento estricto.</p>
-                    <button onclick="window.location.href='config-medicinas.html'" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Configurar Dosis</button>
+                    <button onclick="window.location.href='{% url 'config_medicinas' %}'" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Configurar Dosis</button>
                 </div>
             </div> </div> </section>
 

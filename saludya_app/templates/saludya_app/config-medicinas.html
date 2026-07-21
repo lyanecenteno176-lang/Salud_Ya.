@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>SaludYa - Control de Medicamentos</title>
-    <link rel="stylesheet" href="styles.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
 </head>
 <body style="background-color: var(--bg-light); padding: 3rem 0;">
     <script>
@@ -11,7 +12,7 @@
         const usuarioActivo = localStorage.getItem('usuarioSaludYa');
         if (!usuarioActivo) {
             alert('Acceso restringido. Por favor, inicia sesión o regístrate presionando "Cuidar de mi hoy" para personalizar tus hábitos.');
-            window.location.href = 'Index.Html'; // Redirige de inmediato al inicio
+            window.location.href = '{% url 'index' %}'; // Redirige de inmediato al inicio
         }
     </script>
     <div class="container" style="max-width: 600px; background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
@@ -23,7 +24,7 @@
             <p style="font-size: 0.9rem; color: #c62828;">Para evitar riesgos de toxicidad o sobredosis por olvido, nuestra plataforma bloquea la duplicación de alertas en intervalos menores a los recetados por tu médico.</p>
         </div>
 
-        <form onsubmit="alert('Medicación registrada. SaludYa cuidará estrictamente tus horarios.'); window.location.href='index.html'; return false;">
+        <form onsubmit="alert('Medicación registrada. SaludYa cuidará estrictamente tus horarios.'); window.location.href='/'; return false;">
             <div class="form-group" style="margin-bottom: 1.2rem;">
                 <label style="font-weight: 600; display:block; margin-bottom: .4rem;">Nombre del Medicamento</label>
                 <input type="text" placeholder="Ej. Paracetamol" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px;">

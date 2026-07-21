@@ -16,7 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from saludya_app.views import (
+    index,
+    registro,
+    config_agua,
+    config_ejercicios,
+    config_medicinas,
+)
 
 urlpatterns = [
+    path('', index, name='index'),
+    path('index.html', index, name='index_html'),
+    path('registro.html', registro, name='registro'),
+    path('config-agua.html', config_agua, name='config_agua'),
+    path('config-ejercicios.html', config_ejercicios, name='config_ejercicios'),
+    path('config-medicinas.html', config_medicinas, name='config_medicinas'),
     path('admin/', admin.site.urls),
 ]

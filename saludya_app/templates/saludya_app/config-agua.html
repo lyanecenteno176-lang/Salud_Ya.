@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>SaludYa - Configurar Hidratación</title>
-    <link rel="stylesheet" href="styles.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
 </head>
 <body style="background-color: var(--bg-light); padding: 3rem 0;">
     <script>
@@ -11,14 +12,14 @@
         const usuarioActivo = localStorage.getItem('usuarioSaludYa');
         if (!usuarioActivo) {
             alert('Acceso restringido. Por favor, inicia sesión o regístrate presionando "Cuidar de mi hoy" para personalizar tus hábitos.');
-            window.location.href = 'Index.Html'; // Redirige de inmediato al inicio
+            window.location.href = '{% url 'index' %}'; // Redirige de inmediato al inicio
         }
     </script>
     <div class="container" style="max-width: 600px; background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
         <h2 style="color: var(--secondary-color); margin-bottom: 1rem;">💧 Ajustes de Hidratación</h2>
         <p style="margin-bottom: 2rem; color: #666;">Elige cada cuánto tiempo deseas que SaludYa te recuerde beber agua para mantener tu rendimiento óptimo.</p>
         
-        <form onsubmit="alert('¡Intervalo de hidratación guardado con éxito!'); window.location.href='index.html'; return false;">
+        <form onsubmit="alert('¡Intervalo de hidratación guardado con éxito!'); window.location.href='{% url 'index' %}'; return false;">
             <div class="form-group" style="margin-bottom: 1.5rem;">
                 <label style="font-weight: 600; display:block; margin-bottom: .5rem;">Frecuencia de las alertas:</label>
                 <select style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
