@@ -786,3 +786,6 @@ def api_orders(request):
         for order in orders
     ]
     return JsonResponse({'orders': data})
+
+    def historial(request):
+    return render(request, 'historial.html')
