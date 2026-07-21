@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaludYa - Registro de Actividades</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background-color: var(--white);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .metric-icon {
+            font-size: 2.5rem;
+            background-color: var(--bg-light);
+            padding: 1rem;
+            border-radius: 12px;
+        }
+
+        .metric-data h3 {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+        }
+
+        .metric-data p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .history-container {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -2.6rem;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            border: 3px solid var(--white);
+        }
+
+        .timeline-time {
+            font-size: 0.85rem;
+            color: #888;
+            font-weight: 600;
+        }
+
+        .timeline-title {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            font-weight: bold;
+            margin: 0.2rem 0;
+        }
+
+        .timeline-details {
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .badge-med { background-color: #ffebee; color: #c62828; }
+        .badge-agua { background-color: #e0f7fa; color: #00838f; }
+        .badge-ejercicio { background-color: #e8f5e9; color: #2e7d32; }
+    </style>
+</head>
+<body style="background-color: var(--bg-light); padding-bottom: 3rem;">
+
+    <!-- Bloque de seguridad JS -->
+    <script>
+        const usuarioActivo = localStorage.getItem('usuarioSaludYa');
+        if (!usuarioActivo) {
+            alert('Acceso restringido. Por favor, inicia sesión.');
+            window.location.href = 'Index.html';
+        }
+    </script>
+
+    <!-- Header Principal -->
+    <header class="main-header">
+        <div class="header-container">
+            <h1 class="logo" onclick="window.location.href='Index.html'" style="cursor: pointer;">Salud<span>Ya</span></h1>
+            <nav class="main-nav">
+                <a href="Index.html#inicio">Inicio</a>
+                <a href="Index.html#funciones">Funciones</a>
+                <a href="historial.html" style="color: var(--primary-color); font-weight: bold;">Historial</a>
+                <span id="nav-usuario">
+                    <button onclick="cerrarSesion()" class="btn-secondary" style="padding: 0.3rem 0.8rem;">Cerrar Sesión</button>
+                </span>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" style="margin-top: 2rem;">
+        
+        <div style="margin-bottom: 1.5rem;">
+            <h2 style="color: var(--secondary-color); margin-bottom: 0.2rem;">📊 Registro de Actividades Diarias</h2>
+            <p style="color: #666;">Seguimiento cronológico de tus hábitos, medicación y ejercicios cumplidos.</p>
+        </div>
+
+        <!-- Tarjetas de Métricas Dinámicas -->
+        <section class="dashboard-grid">
+            <div class="metric-card">
+                <div class="metric-icon">🔥</div>
+                <div class="metric-data">
+                    <h3 id="calorias-val">0 kcal</h3>
+                    <p>Calorías Quemadas Hoy</p>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">❤️</div>
+                <div class="metric-data">
+                    <h3 id="pulsaciones-val">0 BPM</h3>
+                    <p>Pulsaciones Promedio</p>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">💧</div>
+                <div class="metric-data">
+                    <h3 id="agua-val">0 ml</h3>
+                    <p>Agua Ingerida Hoy</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Historial / Línea de Tiempo Dinámica -->
+        <section class="history-container">
+            <div class="history-header">
+                <h3 style="color: var(--secondary-color);">Línea de Tiempo - Hoy</h3>
+                <input type="date" id="filtro-fecha" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px;">
+            </div>
+
+            <div class="timeline" id="timeline-container">
+                <!-- Se genera dinámicamente según la sesión -->
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        document.getElementById('filtro-fecha').valueAsDate = new Date();
+
+        // Opciones de actividades y medicamentos para variabilidad
+        const ejerciciosDinamicos = [
+            { tipo: 'Caminata Ligera / Pausa Activa', mins: 15 },
+            { tipo: 'Caminata Acelerada', mins: 30 },
+            { tipo: 'Estiramientos y Movilidad', mins: 20 },
+            { tipo: 'Cardio Suave de Oficina', mins: 25 }
+        ];
+
+        const medicamentosDinamicos = [
+            { nombre: 'Paracetamol 500mg', dosis: 'Dosis matutina tomada a tiempo según programación.' },
+            { nombre: 'Vitamina C + Zinc', dosis: 'Suplemento diario registrado.' },
+            { nombre: 'Ibuprofeno 400mg', dosis: 'Dosis tomadas para alivio muscular.' },
+            { nombre: 'Omeprazol 20mg', dosis: 'Tomado antes del desayuno.' }
+        ];
+
+        function cargarDatosDinamicos() {
+            let calorias = localStorage.getItem('sesion_calorias');
+            let pulsaciones = localStorage.getItem('sesion_pulsaciones');
+            let agua = localStorage.getItem('sesion_agua');
+            let ejIndex = localStorage.getItem('sesion_ej_index');
+            let medIndex = localStorage.getItem('sesion_med_index');
+
+            // Si es la primera vez en la sesión, genera datos únicos pero coherentes
+            if (!calorias) {
+                calorias = Math.floor(Math.random() * (380 - 180 + 1)) + 180;
+                pulsaciones = Math.floor(Math.random() * (85 - 68 + 1)) + 68;
+                agua = Math.floor(Math.random() * (8 - 4 + 1)) * 250 + 500;
+                ejIndex = Math.floor(Math.random() * ejerciciosDinamicos.length);
+                medIndex = Math.floor(Math.random() * medicamentosDinamicos.length);
+
+                localStorage.setItem('sesion_calorias', calorias);
+                localStorage.setItem('sesion_pulsaciones', pulsaciones);
+                localStorage.setItem('sesion_agua', agua);
+                localStorage.setItem('sesion_ej_index', ejIndex);
+                localStorage.setItem('sesion_med_index', medIndex);
+            }
+
+            // Renderizar métricas en tarjetas
+            document.getElementById('calorias-val').textContent = calorias + ' kcal';
+            document.getElementById('pulsaciones-val').textContent = pulsaciones + ' BPM';
+            document.getElementById('agua-val').textContent = agua.toLocaleString() + ' ml';
+
+            // Renderizar la línea de tiempo sincronizada
+            renderizarTimeline(calorias, agua, pulsaciones, ejIndex, medIndex);
+        }
+
+        function renderizarTimeline(calorias, agua, pulsaciones, ejIndex, medIndex) {
+            const ej = ejerciciosDinamicos[ejIndex || 0];
+            const med = medicamentosDinamicos[medIndex || 0];
+            const container = document.getElementById('timeline-container');
+
+            container.innerHTML = `
+                <div class="timeline-item">
+                    <div class="timeline-dot" style="background-color: #c62828;"></div>
+                    <span class="timeline-time">08:00 AM</span>
+                    <div class="timeline-title">
+                        ${med.nombre} 
+                        <span class="badge badge-med">Medicación</span>
+                    </div>
+                    <div class="timeline-details">${med.dosis}</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot" style="background-color: #2e7d32;"></div>
+                    <span class="timeline-time">10:30 AM</span>
+                    <div class="timeline-title">
+                        ${ej.tipo} 
+                        <span class="badge badge-ejercicio">Ejercicio</span>
+                    </div>
+                    <div class="timeline-details">Duración: ${ej.mins} mins | Ritmo promedio: ${pulsaciones} BPM | Estimado: ${calorias} kcal quemadas.</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot" style="background-color: #00838f;"></div>
+                    <span class="timeline-time">02:15 PM</span>
+                    <div class="timeline-title">
+                        Registro de Hidratación 
+                        <span class="badge badge-agua">Agua</span>
+                    </div>
+                    <div class="timeline-details">Consumo acumulado del día: ${agua.toLocaleString()} ml completados.</div>
+                </div>
+            `;
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem('usuarioSaludYa');
+            localStorage.removeItem('sesion_calorias');
+            localStorage.removeItem('sesion_pulsaciones');
+            localStorage.removeItem('sesion_agua');
+            localStorage.removeItem('sesion_ej_index');
+            localStorage.removeItem('sesion_med_index');
+            alert('Has cerrado sesión.');
+            window.location.href = 'Index.html';
+        }
+
+        window.onload = cargarDatosDinamicos;
+    </script>
+</body>
+</html>
