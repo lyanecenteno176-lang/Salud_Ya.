@@ -12,36 +12,163 @@
         const usuarioActivo = localStorage.getItem('usuarioSaludYa');
         if (!usuarioActivo) {
             alert('Acceso restringido. Por favor, inicia sesión o regístrate presionando "Cuidar de mi hoy" para personalizar tus hábitos.');
-            window.location.href = '{% url 'index' %}'; // Redirige de inmediato al inicio
+            window.location.href = "{% url 'index' %}"; // Redirige de inmediato al inicio
         }
     </script>
     <div class="container" style="max-width: 600px; background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
-        <h2 style="color: var(--secondary-color); margin-bottom: 1rem;">💊 Gestión Responsable de Medicación</h2>
-        
+        <section class="hero-section">
+            <div>
+                <h1>Pequeñas acciones constantes para una vida más saludable</h1>
+                <p>Organiza tus rutinas de medicamento con calma, mantén tus hábitos y siéntete más seguro cada día.</p>
+                <a href="{% url 'registro' %}" class="btn-primary">Empieza ahora</a>
+            </div>
+            <div class="hero-image">
+                <img src="{% static 'saludya_app/img/hero-medicacion.png' %}" alt="SaludYa control de medicación" />
+            </div>
+        </section>
+
+        <div class="testimonial-section" style="margin-top: 1.5rem;">
+            <h3 style="color: var(--secondary-color); margin-bottom: 1rem;">Testimonios</h3>
+            <div class="testimonial-cards">
+                <div class="testimonial-card">
+                    <img src="{% static 'saludya_app/img/user-1.jpg' %}" alt="Usuario satisfecho" />
+                    <p>"SaludYa me ayuda a recordar mis medicinas sin estrés. Ahora mi familia confía más en mi autocuidado."</p>
+                    <strong>María S.</strong>
+                </div>
+                <div class="testimonial-card">
+                    <img src="{% static 'saludya_app/img/user-2.jpg' %}" alt="Usuario satisfecho" />
+                    <p>"Con el calendario de medicación, mi tratamiento es más claro y nunca olvido una dosis."</p>
+                    <strong>Carlos R.</strong>
+                </div>
+                <div class="testimonial-card">
+                    <img src="{% static 'saludya_app/img/user-3.jpg' %}" alt="Usuario satisfecho" />
+                    <p>"Pequeños pasos diarios y alertas inteligentes. SaludYa cambió mi rutina para mejor."</p>
+                    <strong>Lucía M.</strong>
+                </div>
+            </div>
+        </div>
+
         <!-- Bloque educativo con enfoque humano preventivo -->
         <div style="background-color: #ffebee; border-left: 5px solid var(--accent-color); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <h4 style="color: #c62828; margin-bottom: 0.2rem;">⚠️ Alerta de Prevención</h4>
             <p style="font-size: 0.9rem; color: #c62828;">Para evitar riesgos de toxicidad o sobredosis por olvido, nuestra plataforma bloquea la duplicación de alertas en intervalos menores a los recetados por tu médico.</p>
         </div>
 
-        <form onsubmit="alert('Medicación registrada. SaludYa cuidará estrictamente tus horarios.'); window.location.href='/'; return false;">
+        <form id="formMedicacion">
             <div class="form-group" style="margin-bottom: 1.2rem;">
-                <label style="font-weight: 600; display:block; margin-bottom: .4rem;">Nombre del Medicamento</label>
-                <input type="text" placeholder="Ej. Paracetamol" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px;">
+                <label style="font-weight: 600; display:block; margin-bottom: .4rem;" for="medicamentoNombre">Nombre del Medicamento</label>
+                <input type="text" id="medicamentoNombre" placeholder="Ej. Paracetamol" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px;">
             </div>
 
             <div class="form-group" style="margin-bottom: 1.2rem;">
-                <label style="font-weight: 600; display:block; margin-bottom: .4rem;">Dosis Exacta Recetada</label>
-                <input type="text" placeholder="Ej. 500 mg o 1 tableta" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px;">
+                <label style="font-weight: 600; display:block; margin-bottom: .4rem;" for="medicamentoDosis">Dosis Exacta Recetada</label>
+                <input type="text" id="medicamentoDosis" placeholder="Ej. 500 mg o 1 tableta" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px;">
             </div>
 
-            <div class="form-group" style="margin-bottom: 1.5rem;">
-                <label style="font-weight: 600; display:block; margin-bottom: .4rem;">Intervalo de Seguridad Médico (Horas)</label>
-                <input type="number" min="4" max="24" placeholder="Ej. Cada 8 horas" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px;">
+            <div class="form-group" style="margin-bottom: 1.2rem;">
+                <label style="font-weight: 600; display:block; margin-bottom: .4rem;" for="fechaMedicacion">Fecha del recordatorio</label>
+                <input type="date" id="fechaMedicacion" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px;">
             </div>
 
-            <button type="submit" class="btn-main" style="border: none; width: 100%; padding: 1rem; border-radius: 10px; cursor: pointer; background-color: var(--secondary-color);">Activar Recordatorio Seguro</button>
+            <div class="form-group" style="margin-bottom: 1.2rem;">
+                <label style="font-weight: 600; display:block; margin-bottom: .4rem;" for="horaMedicacion">Hora del recordatorio</label>
+                <input type="time" id="horaMedicacion" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px;">
+            </div>
+
+            <button type="submit" class="btn-main" style="border: none; width: 100%; padding: 1rem; border-radius: 10px; cursor: pointer; background-color: var(--secondary-color);">Guardar Recordatorio</button>
         </form>
+
+        <div class="medicacion-calendario" style="margin-top: 2rem;">
+            <h3 style="color: var(--secondary-color); margin-bottom: 1rem;">Calendario de Medicación</h3>
+            <div class="section-card" style="margin-bottom: 1rem;">
+                <p style="color: #555; margin: 0;">Usa este calendario para registrar el día, mes y hora en que debes tomar cada medicamento.</p>
+            </div>
+            <div id="listaMedicacion"></div>
+        </div>
     </div>
+
+    <script>
+        const MEDICACION_KEY = 'saludYaMedicacion';
+
+        function obtenerMedicacion() {
+            const raw = localStorage.getItem(MEDICACION_KEY);
+            return raw ? JSON.parse(raw) : [];
+        }
+
+        function guardarMedicacion(records) {
+            records.sort((a, b) => {
+                if (a.fecha < b.fecha) return -1;
+                if (a.fecha > b.fecha) return 1;
+                return a.hora < b.hora ? -1 : a.hora > b.hora ? 1 : 0;
+            });
+            localStorage.setItem(MEDICACION_KEY, JSON.stringify(records));
+        }
+
+        function mostrarMedicacion() {
+            const records = obtenerMedicacion();
+            const contenedor = document.getElementById('listaMedicacion');
+            if (records.length === 0) {
+                contenedor.innerHTML = '<p style="color: #555;">Aún no hay recordatorios de medicación programados.</p>';
+                return;
+            }
+
+            contenedor.innerHTML = records.map((item, index) => {
+                return `
+                    <div class="medicacion-item">
+                        <div class="medicacion-item-header">
+                            <div>
+                                <strong>${item.nombre}</strong>
+                                <p class="medicacion-meta">${item.dosis}</p>
+                            </div>
+                            <button type="button" class="btn-small" onclick="eliminarMedicacion(${index})">Eliminar</button>
+                        </div>
+                        <p class="medicacion-fecha">Fecha: ${item.fecha} · Hora: ${item.hora}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function eliminarMedicacion(index) {
+            const records = obtenerMedicacion();
+            records.splice(index, 1);
+            guardarMedicacion(records);
+            mostrarMedicacion();
+        }
+
+        document.getElementById('formMedicacion').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const nombre = document.getElementById('medicamentoNombre').value.trim();
+            const dosis = document.getElementById('medicamentoDosis').value.trim();
+            const fecha = document.getElementById('fechaMedicacion').value;
+            const hora = document.getElementById('horaMedicacion').value;
+
+            if (!fecha || !hora) {
+                alert('Por favor completa la fecha y la hora del recordatorio.');
+                return;
+            }
+
+            const recordatorio = { nombre, dosis, fecha, hora };
+            const records = obtenerMedicacion();
+            records.push(recordatorio);
+            guardarMedicacion(records);
+            mostrarMedicacion();
+
+            alert('Recordatorio de medicación guardado. SaludYa te avisará en la fecha y hora programadas.');
+            document.getElementById('formMedicacion').reset();
+        });
+
+        function verificarSesion() {
+            const usuarioActivo = localStorage.getItem('usuarioSaludYa');
+            if (!usuarioActivo) {
+                alert('Acceso restringido. Por favor, inicia sesión o regístrate presionando "Cuidar de mi hoy" para personalizar tus hábitos.');
+                window.location.href = "{% url 'index' %}";
+            }
+        }
+
+        window.onload = function() {
+            verificarSesion();
+            mostrarMedicacion();
+        };
+    </script>
 </body>
 </html>

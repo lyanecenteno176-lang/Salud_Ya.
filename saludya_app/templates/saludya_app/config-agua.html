@@ -12,7 +12,7 @@
         const usuarioActivo = localStorage.getItem('usuarioSaludYa');
         if (!usuarioActivo) {
             alert('Acceso restringido. Por favor, inicia sesión o regístrate presionando "Cuidar de mi hoy" para personalizar tus hábitos.');
-            window.location.href = '{% url 'index' %}'; // Redirige de inmediato al inicio
+            window.location.href = "{% url 'index' %}"; // Redirige de inmediato al inicio
         }
     </script>
     <div class="container" style="max-width: 600px; background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">

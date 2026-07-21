@@ -12,27 +12,197 @@
         const usuarioActivo = localStorage.getItem('usuarioSaludYa');
         if (!usuarioActivo) {
             alert('Acceso restringido. Por favor, inicia sesión o regístrate presionando "Cuidar de mi hoy" para personalizar tus hábitos.');
-            window.location.href = '{% url 'index' %}'; // Redirige de inmediato al inicio
+            window.location.href = "{% url 'index' %}"; // Redirige de inmediato al inicio
         }
     </script>
-    <div class="container" style="max-width: 600px; background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
-        <h2 style="color: var(--secondary-color); margin-bottom: 1rem;">🧘 Rutinas de Pausas Activas</h2>
+    <div class="container" style="max-width: 700px; background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
+        <h2 style="color: var(--secondary-color); margin-bottom: 0.75rem;">🧘 Registro de Actividades</h2>
         
-        <div style="background-color: #e0f2f1; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
-            <h4 style="color: var(--secondary-color);">💡 Recomendación del día para mitigar el estrés académico:</h4>
-            <p style="font-size: 0.95rem; margin-top: 0.5rem;"><strong>Estiramiento de cuello y hombros:</strong> Gira la cabeza suavemente hacia la izquierda durante 10 segundos y luego cambia a la derecha. Ayuda a liberar la tensión acumulada por estar frente a la laptop.</p>
+        <div class="section-card" style="margin-bottom: 1.5rem;">
+            <h4 style="color: var(--secondary-color);">💡 Control de actividad física y sedentarismo</h4>
+            <p style="font-size: 0.95rem; margin-top: 0.5rem;">Registra tus actividades por categoría, día, hora y seguimiento de movimiento. SaludYa te alertará cuando sea momento de realizar actividad física.</p>
+            <div id="actividadResumen" class="activity-summary"></div>
         </div>
 
-        <form onsubmit="alert('¡Tiempo de pausa programado!'); window.location.href='{% url 'index' %}'; return false;">
-            <div class="form-group" style="margin-bottom: 1.5rem;">
-                <label style="font-weight: 600; display:block; margin-bottom: .5rem;">¿Cada cuánto tiempo harás una pausa?</label>
-                <select style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
-                    <option value="45">Cada 45 minutos de estudio/trabajo</option>
-                    <option value="90">Cada 90 minutos</option>
+        <form id="formActividad" class="activity-form">
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="font-weight: 600; display:block; margin-bottom: .5rem;" for="categoriaActividad">Categoría</label>
+                <select id="categoriaActividad" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
+                    <option value="" disabled selected>Selecciona una categoría</option>
+                    <option value="Actividad Física">Actividad Física</option>
+                    <option value="Gimnasio">Gimnasio</option>
+                    <option value="Ciclismo">Ciclismo</option>
+                    <option value="Caminata">Caminata</option>
+                    <option value="Estiramiento">Estiramiento</option>
+                    <option value="Otro">Otro</option>
                 </select>
             </div>
-            <button type="submit" class="btn-main" style="border: none; width: 100%; padding: 1rem; border-radius: 10px; cursor: pointer;">Programar Pausa</button>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="font-weight: 600; display:block; margin-bottom: .5rem;" for="descripcionActividad">Descripción</label>
+                <input type="text" id="descripcionActividad" placeholder="Ej. Caminar en el parque" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="font-weight: 600; display:block; margin-bottom: .5rem;" for="fechaActividad">Fecha</label>
+                <input type="date" id="fechaActividad" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="font-weight: 600; display:block; margin-bottom: .5rem;" for="horaActividad">Hora</label>
+                <input type="time" id="horaActividad" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="font-weight: 600; display:block; margin-bottom: .5rem;" for="minutosCaminando">Minutos caminando</label>
+                <input type="number" id="minutosCaminando" min="0" placeholder="Ej. 30" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label style="font-weight: 600; display:block; margin-bottom: .5rem;" for="minutosInactividad">Minutos sin actividad física</label>
+                <input type="number" id="minutosInactividad" min="0" placeholder="Ej. 60" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px;">
+            </div>
+
+            <button type="submit" class="btn-main" style="border: none; width: 100%; padding: 1rem; border-radius: 10px; cursor: pointer;">Registrar Actividad</button>
         </form>
+
+        <div class="activity-log" style="margin-top: 2rem;">
+            <h3 style="color: var(--secondary-color); margin-bottom: 1rem;">Actividades registradas</h3>
+            <div id="listaActividades"></div>
+        </div>
     </div>
+
+    <script>
+        const ACTIVIDADES_KEY = 'saludYaActividades';
+
+        function obtenerActividades() {
+            const raw = localStorage.getItem(ACTIVIDADES_KEY);
+            return raw ? JSON.parse(raw) : [];
+        }
+
+        function guardarActividades(actividades) {
+            actividades.sort((a, b) => {
+                if (a.categoria < b.categoria) return -1;
+                if (a.categoria > b.categoria) return 1;
+                if (a.fecha < b.fecha) return -1;
+                if (a.fecha > b.fecha) return 1;
+                return a.hora < b.hora ? -1 : a.hora > b.hora ? 1 : 0;
+            });
+            localStorage.setItem(ACTIVIDADES_KEY, JSON.stringify(actividades));
+        }
+
+        function actualizarResumen(actividades) {
+            const resumen = document.getElementById('actividadResumen');
+            if (!resumen) return;
+            const total = actividades.length;
+            const totalCaminando = actividades.reduce((sum, item) => sum + (item.minutos_caminando || 0), 0);
+            const totalInactividad = actividades.reduce((sum, item) => sum + (item.minutos_inactividad || 0), 0);
+
+            resumen.innerHTML = `
+                <div class="activity-summary-card">
+                    <div>
+                        <strong>${total}</strong>
+                        <p>actividades</p>
+                    </div>
+                    <div>
+                        <strong>${totalCaminando}</strong>
+                        <p>minutos caminando</p>
+                    </div>
+                    <div>
+                        <strong>${totalInactividad}</strong>
+                        <p>minutos inactivo</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function mostrarActividades() {
+            const actividades = obtenerActividades();
+            const contenedor = document.getElementById('listaActividades');
+            if (actividades.length === 0) {
+                contenedor.innerHTML = '<p style="color: #555;">Aún no hay actividades registradas.</p>';
+                actualizarResumen(actividades);
+                return;
+            }
+
+            contenedor.innerHTML = actividades.map((actividad, index) => {
+                return `
+                    <div class="actividad-card">
+                        <div class="actividad-card-header">
+                            <div>
+                                <strong>${actividad.categoria}</strong>
+                                <p class="actividad-meta">${actividad.fecha} · ${actividad.hora}</p>
+                            </div>
+                            <button type="button" class="btn-small" onclick="eliminarActividad(${index})">Eliminar</button>
+                        </div>
+                        <p class="actividad-descripcion">${actividad.descripcion}</p>
+                        <p class="actividad-detalle">Caminando: ${actividad.minutos_caminando} min · Inactividad: ${actividad.minutos_inactividad} min</p>
+                    </div>
+                `;
+            }).join('');
+            actualizarResumen(actividades);
+        }
+
+        function eliminarActividad(index) {
+            const actividades = obtenerActividades();
+            actividades.splice(index, 1);
+            guardarActividades(actividades);
+            mostrarActividades();
+        }
+
+        document.getElementById('formActividad').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const categoria = document.getElementById('categoriaActividad').value;
+            const descripcion = document.getElementById('descripcionActividad').value.trim();
+            const fecha = document.getElementById('fechaActividad').value;
+            const hora = document.getElementById('horaActividad').value;
+            const minutosCaminando = parseInt(document.getElementById('minutosCaminando').value, 10);
+            const minutosInactividad = parseInt(document.getElementById('minutosInactividad').value, 10);
+
+            if (!fecha || !hora) {
+                alert('Por favor completa la fecha y la hora.');
+                return;
+            }
+
+            const actividad = {
+                categoria,
+                descripcion,
+                fecha,
+                hora,
+                minutos_caminando: minutosCaminando,
+                minutos_inactividad: minutosInactividad,
+            };
+
+            const actividades = obtenerActividades();
+            actividades.push(actividad);
+            guardarActividades(actividades);
+            mostrarActividades();
+
+            let mensajeAlerta = 'Actividad registrada correctamente.';
+            if (categoria === 'Actividad Física') {
+                mensajeAlerta = 'Alerta: es momento de realizar actividad física. Registra tu rutina y mantén tu movimiento activo.';
+            } else if (categoria === 'Gimnasio') {
+                mensajeAlerta = 'Alerta: es momento de ir al gimnasio. Cuida tu fuerza y tu energía con disciplina.';
+            } else if (categoria === 'Ciclismo') {
+                mensajeAlerta = 'Alerta: es momento de salir a pedalear. Mantén el ritmo y disfruta el movimiento al aire libre.';
+            }
+
+            alert(mensajeAlerta);
+            document.getElementById('formActividad').reset();
+        });
+
+        function verificarSesion() {
+            const usuarioActivo = localStorage.getItem('usuarioSaludYa');
+            if (!usuarioActivo) {
+                alert('Acceso restringido. Por favor, inicia sesión o regístrate presionando \"Cuidar de mi hoy\" para personalizar tus hábitos.');
+                window.location.href = "{% url 'index' %}";
+            }
+        }
+
+        window.onload = function() {
+            verificarSesion();
+            mostrarActividades();
+        };
+    </script>
 </body>
 </html>

@@ -36,6 +36,25 @@
                     <input type="email" id="correo" placeholder="ejemplo@correo.com" required>
                 </div>
 
+                <div class="form-group fecha-nacimiento-group">
+                    <label>Fecha de nacimiento</label>
+                    <div class="fecha-nacimiento-inputs" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem;">
+                        <input type="number" id="diaNacimiento" placeholder="Día" min="1" max="31" required>
+                        <input type="number" id="mesNacimiento" placeholder="Mes" min="1" max="12" required>
+                        <input type="number" id="anioNacimiento" placeholder="Año" min="1900" max="2026" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="situacionLaboral">Situación laboral</label>
+                    <select id="situacionLaboral" required>
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <option value="Estudiante">Estudiante</option>
+                        <option value="Trabajador">Trabajador</option>
+                        <option value="Desempleado">Desempleado</option>
+                    </select>
+                </div>
+
                 <!-- Botón personalizado y empático -->
                 <button type="submit" class="btn-submit">Empezar a cuidarme</button>
             </form>
@@ -47,15 +66,42 @@
         document.getElementById('formRegistro').addEventListener('submit', function(event) {
             event.preventDefault(); // Evita que la página se recargue de golpe
             
-            // Capturamos el nombre de manera humana para darle una bienvenida personalizada
             const nombreUsuario = document.getElementById('nombre').value;
-            
-            // Guardamos el nombre temporalmente en el navegador
+            const diaNacimiento = parseInt(document.getElementById('diaNacimiento').value, 10);
+            const mesNacimiento = parseInt(document.getElementById('mesNacimiento').value, 10) - 1; // Mes en base 0
+            const anioNacimiento = parseInt(document.getElementById('anioNacimiento').value, 10);
+            const situacionLaboral = document.getElementById('situacionLaboral').value;
+
+            const fechaNacimiento = new Date(anioNacimiento, mesNacimiento, diaNacimiento);
+            const hoy = new Date();
+
+            if (isNaN(fechaNacimiento.getTime()) || fechaNacimiento.getFullYear() !== anioNacimiento || fechaNacimiento.getMonth() !== mesNacimiento || fechaNacimiento.getDate() !== diaNacimiento) {
+                alert('Por favor ingresa una fecha de nacimiento válida.');
+                return;
+            }
+
+            if (fechaNacimiento > hoy) {
+                alert('La fecha de nacimiento no puede ser futura.');
+                return;
+            }
+
+            let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+            const mesActual = hoy.getMonth();
+            const diaActual = hoy.getDate();
+
+            if (mesActual < fechaNacimiento.getMonth() || (mesActual === fechaNacimiento.getMonth() && diaActual < fechaNacimiento.getDate())) {
+                edad -= 1;
+            }
+
+            const fechaNacimientoTexto = fechaNacimiento.toISOString().slice(0, 10);
+
             localStorage.setItem('usuarioSaludYa', nombreUsuario);
+            localStorage.setItem('edadSaludYa', edad);
+            localStorage.setItem('fechaNacimientoSaludYa', fechaNacimientoTexto);
+            localStorage.setItem('situacionLaboralSaludYa', situacionLaboral);
+
+            alert('¡Registro exitoso! Bienvenido, ' + nombreUsuario + '. Hemos calculado tu edad como ' + edad + ' años y registrado tu situación: ' + situacionLaboral + '.');
             
-            alert('¡Registro exitoso! Qué alegría tenerte aquí, ' + nombreUsuario + '. :D');
-            
-            // Redirige automáticamente a la página principal
             window.location.href = '{% url 'index' %}';
         });
     </script>

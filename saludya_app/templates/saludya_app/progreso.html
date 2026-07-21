@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaludYa - Panel de Progreso</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body style="background-color: var(--bg-light); padding: 2rem 0;">
+    <div class="container" style="max-width: 1200px;">
+        <div class="dashboard-header">
+            <div>
+                <h1>Panel de Progreso</h1>
+                <p style="color: #555;">Revisa tus hábitos, logros y desempeño en tiempo real.</p>
+            </div>
+            <div class="export-block">
+                <a href="{% url 'export_progress_pdf' %}">Exportar informe PDF</a>
+            </div>
+        </div>
+
+        <div class="dashboard-overview">
+            <div class="overview-card">
+                <h3>Hábitos activos</h3>
+                <strong>{{ habits.count }}</strong>
+                <p>Indicadores que estás siguiendo actualmente.</p>
+            </div>
+            <div class="overview-card">
+                <h3>Entradas recientes</h3>
+                <strong>{{ entries|length }}</strong>
+                <p>Registros de hábitos creados en los últimos días.</p>
+            </div>
+            <div class="overview-card">
+                <h3>Insignias totales</h3>
+                <strong>{{ badges.count }}</strong>
+                <p>Logros desbloqueados y metas alcanzadas.</p>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <section class="chart-panel">
+                <h2>Progreso semanal</h2>
+                <canvas id="progressChart" class="chart-canvas"></canvas>
+            </section>
+
+            <aside class="activity-panel">
+                <h2>Actividad reciente</h2>
+                <ul class="activity-list">
+                    {% for entry in entries %}
+                        <li>
+                            <strong>{{ entry.habit.name }}</strong>
+                            <p>{{ entry.date }} — {{ entry.quantity }} {{ entry.habit.unit }}</p>
+                            <span class="progress-tag">{{ entry.completed|yesno:"Completado,En progreso" }}</span>
+                        </li>
+                    {% empty %}
+                        <li>No hay registros recientes.</li>
+                    {% endfor %}
+                </ul>
+
+                <div style="margin-top: 2rem;">
+                    <h2>Insignias</h2>
+                    <ul class="badge-list">
+                        {% for badge in badges %}
+                            <li>
+                                <span><span class="badge-icon">{{ badge.icon }}</span> {{ badge.name }}</span>
+                                <span>{{ badge.date_awarded|default:"Pendiente" }}</span>
+                            </li>
+                        {% empty %}
+                            <li>No hay insignias aún.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </aside>
+        </div>
+
+        <section class="chart-panel">
+            <h2>Registros de progreso</h2>
+            <ul class="record-list">
+                {% for record in progress_records %}
+                    <li>
+                        <strong>{{ record.period|title }} · {{ record.date }}</strong>
+                        <p>Hidratación: {{ record.hydration_pct }}% · Pausas: {{ record.pause_pct }}% · Medicación: {{ record.medication_pct }}%</p>
+                    </li>
+                {% empty %}
+                    <li>No hay registros de progreso.</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        const progressData = {
+            labels: [{% for record in progress_records reversed %}'{{ record.date }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+            datasets: [
+                {
+                    label: 'Hidratación',
+                    data: [{% for record in progress_records reversed %}{{ record.hydration_pct }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+                    borderColor: '#2ec4b6',
+                    backgroundColor: 'rgba(46,196,182,0.2)',
+                    tension: 0.4,
+                    fill: true,
+                },
+                {
+                    label: 'Pausas activas',
+                    data: [
+                        {% for record in progress_records reversed %}
+                            {{ record.pause_pct }},{% endfor %}
+                    ],
+                    borderColor: '#011627',
+                    backgroundColor: 'rgba(1,22,39,0.2)',
+                    tension: 0.4,
+                    fill: true,
+                },
+                {
+                    label: 'Medicación',
+                    data: [
+                        {% for record in progress_records reversed %}
+                            {{ record.medication_pct }},{% endfor %}
+                    ],
+                    borderColor: '#e71d36',
+                    backgroundColor: 'rgba(231,29,54,0.2)',
+                    tension: 0.4,
+                    fill: true,
+                }
+            ]
+        };
+
+        const chartConfig = {
+            type: 'line',
+            data: progressData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, max: 100 },
+                }
+            }
+        };
+
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        new Chart(ctx, chartConfig);
+    </script>
+</body>
+</html>

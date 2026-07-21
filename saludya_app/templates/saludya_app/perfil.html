@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SaludYa - Perfil de Usuario</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
+</head>
+<body style="background-color: var(--bg-light); padding: 3rem 0;">
+    <div class="container" style="max-width: 900px; background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <img src="{% static 'saludya_app/img/avatar-placeholder.png' %}" alt="Avatar de usuario">
+            </div>
+            <div>
+                <h1 id="perfilNombre">Bienvenido, Usuario</h1>
+                <p id="perfilEmail">Tu espacio de bienestar personal</p>
+            </div>
+        </div>
+
+        <section class="profile-section">
+            <div class="profile-card">
+                <h3>Historial de hábitos</h3>
+                <p>Registros completados esta semana</p>
+                <div class="habit-summary-grid">
+                    <div class="habit-summary-card">
+                        <strong id="habitosCreados">0</strong>
+                        <span>Recordatorios cumplidos</span>
+                    </div>
+                    <div class="habit-summary-card">
+                        <strong id="habitosPendientes">0</strong>
+                        <span>Recordatorios pendientes</span>
+                    </div>
+                    <div class="habit-summary-card">
+                        <strong id="habitosExitosos">0</strong>
+                        <span>Hábitos difíciles completados</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <h3>Metas configurables</h3>
+                <p>Define tus objetivos de bienestar y sigue tu progreso.</p>
+                <form id="formMetas">
+                    <div class="form-group">
+                        <label for="metaHidratacion">Beber agua</label>
+                        <input type="text" id="metaHidratacion" placeholder="Ej. Beber 2L de agua al día" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="metaPausas">Pausas activas</label>
+                        <input type="text" id="metaPausas" placeholder="Ej. 3 pausas activas por día" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="metaMedicacion">Medicación</label>
+                        <input type="text" id="metaMedicacion" placeholder="Ej. Tomar medicación a tiempo" required>
+                    </div>
+                    <button type="submit" class="btn-main">Guardar metas</button>
+                </form>
+                <div id="metasGuardadas" class="goals-list" style="margin-top: 1.5rem;"></div>
+            </div>
+        </section>
+
+        <section class="plans-section">
+            <h2 class="section-title">Planes y Compras</h2>
+            <div class="plans-grid">
+                <div class="plan-card">
+                    <h3>Suscripción gratuita</h3>
+                    <p>Funciones básicas para comenzar tu rutina de bienestar.</p>
+                    <ul>
+                        <li>Recordatorios de medicamentos</li>
+                        <li>Seguimiento de agua</li>
+                        <li>Pausas activas simples</li>
+                    </ul>
+                    <button type="button" class="btn-secondary" onclick="selectPlan('gratuita')">Activar gratis</button>
+                </div>
+
+                <div class="plan-card premium-card">
+                    <h3>Suscripción premium</h3>
+                    <p>Más herramientas para un cuidado completo y conectado.</p>
+                    <ul>
+                        <li>Planes personalizados de salud</li>
+                        <li>Integración con wearables</li>
+                        <li>Descuentos en el marketplace</li>
+                    </ul>
+                    <button type="button" class="btn-main" onclick="selectPlan('premium')">Comprar Premium</button>
+                    <p class="secure-note">Pasarela de pago segura y protección de datos</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="planModal" class="modal-overlay" onclick="closePlanModal(event)">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="planModalTitle">
+            <button class="modal-close" onclick="closePlanModal(event)">×</button>
+            <h3 id="planModalTitle"></h3>
+            <p id="planModalMessage"></p>
+
+            <form id="paymentForm" class="payment-form" onsubmit="return processPayment(event)">
+                <div class="form-group">
+                    <label for="paymentName">Nombre en la tarjeta</label>
+                    <input id="paymentName" type="text" placeholder="Nombre completo" required>
+                </div>
+                <div class="form-group">
+                    <label for="paymentCard">Número de tarjeta</label>
+                    <input id="paymentCard" type="text" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                </div>
+                <div class="payment-row">
+                    <div class="form-group">
+                        <label for="paymentExpiry">Vence</label>
+                        <input id="paymentExpiry" type="text" placeholder="MM/AA" maxlength="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentCvv">CVV</label>
+                        <input id="paymentCvv" type="text" placeholder="123" maxlength="4" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-main">Pagar Premium</button>
+            </form>
+
+            <button id="modalDismiss" class="btn-secondary" style="margin-top: 1rem;">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        const PERFIL_METAS_KEY = 'saludYaMetas';
+
+        function cargarPerfil() {
+            const usuario = localStorage.getItem('usuarioSaludYa') || 'Usuario';
+            document.getElementById('perfilNombre').textContent = `Bienvenido, ${usuario}`;
+            document.getElementById('perfilEmail').textContent = 'Tu espacio de bienestar personal';
+            mostrarMetas();
+        }
+
+        function obtenerMetas() {
+            const raw = localStorage.getItem(PERFIL_METAS_KEY);
+            return raw ? JSON.parse(raw) : [];
+        }
+
+        function guardarMetas(metas) {
+            localStorage.setItem(PERFIL_METAS_KEY, JSON.stringify(metas));
+        }
+
+        function mostrarMetas() {
+            const metas = obtenerMetas();
+            const contenedor = document.getElementById('metasGuardadas');
+            if (metas.length === 0) {
+                contenedor.innerHTML = '<p style="color: #555;">No hay metas configuradas aún.</p>';
+                return;
+            }
+            contenedor.innerHTML = metas.map((meta, index) => `
+                <div class="goal-card">
+                    <p>${meta}</p>
+                    <button type="button" onclick="eliminarMeta(${index})" class="btn-small">Eliminar</button>
+                </div>
+            `).join('');
+        }
+
+        function eliminarMeta(index) {
+            const metas = obtenerMetas();
+            metas.splice(index, 1);
+            guardarMetas(metas);
+            mostrarMetas();
+        }
+
+        document.getElementById('formMetas').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const metaHidratacion = document.getElementById('metaHidratacion').value.trim();
+            const metaPausas = document.getElementById('metaPausas').value.trim();
+            const metaMedicacion = document.getElementById('metaMedicacion').value.trim();
+            const metas = obtenerMetas();
+
+            if (metaHidratacion) metas.push(metaHidratacion);
+            if (metaPausas) metas.push(metaPausas);
+            if (metaMedicacion) metas.push(metaMedicacion);
+
+            guardarMetas(metas);
+            mostrarMetas();
+            this.reset();
+        });
+
+        window.onload = cargarPerfil;
+
+        function selectPlan(plan) {
+            const title = plan === 'premium' ? 'Premium SaludYa' : 'Suscripción Gratuita';
+            const message = plan === 'premium'
+                ? 'Completa el pago seguro de Premium para activar planes personalizados, integración con wearables y descuentos en el marketplace.'
+                : 'Has seleccionado la suscripción gratuita. Podrás empezar con funciones básicas de bienestar sin costo.';
+            document.getElementById('planModalTitle').textContent = title;
+            document.getElementById('planModalMessage').textContent = message;
+            document.getElementById('planModal').classList.add('visible');
+
+            const paymentForm = document.getElementById('paymentForm');
+            if (plan === 'premium') {
+                paymentForm.style.display = 'block';
+            } else {
+                paymentForm.style.display = 'none';
+            }
+        }
+
+        function closePlanModal(event) {
+            event.stopPropagation();
+            if (event.target.id === 'planModal' || event.target.classList.contains('modal-close') || event.target.id === 'modalDismiss') {
+                document.getElementById('planModal').classList.remove('visible');
+            }
+        }
+
+        function processPayment(event) {
+            event.preventDefault();
+            const name = document.getElementById('paymentName').value.trim();
+            const card = document.getElementById('paymentCard').value.trim();
+            const expiry = document.getElementById('paymentExpiry').value.trim();
+            const cvv = document.getElementById('paymentCvv').value.trim();
+
+            if (!name || !card || !expiry || !cvv) {
+                alert('Por favor completa todos los campos de pago.');
+                return false;
+            }
+
+            alert('Pago simulado exitoso. ¡Bienvenido a Premium SaludYa!');
+            document.getElementById('planModal').classList.remove('visible');
+            return false;
+        }
+    </script>
+</body>
+</html>
