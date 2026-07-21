@@ -3,3 +3,8 @@ settings.py
 __pycache__/
 db.sqlite3
 .env
+
+
+# Entornos virtuales
+venv311/
+venv/
