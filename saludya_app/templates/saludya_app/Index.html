@@ -4,54 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SaludYa - Tu Compañero de Bienestar Diario</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body style="margin: 0; min-height: 100vh;">
+<body>
 
-    <div id="loginPage" class="login-page" style="display: flex !important; position: fixed !important; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; z-index: 1000000 !important; overflow: hidden; background: linear-gradient(135deg, #bde6df 0%, #e7f6f3 100%);">
-        <div class="login-card">
-            <h2>Bienvenido a SaludYa</h2>
-            <p>Inicia sesión para acceder a tus funciones de bienestar.</p>
-            <form id="loginForm" class="login-form">
-                <div class="form-group">
-                    <label for="loginNombre">Nombre</label>
-                    <input type="text" id="loginNombre" placeholder="Ingresa tu nombre" required>
-                </div>
-                <button type="submit" class="btn-submit">Iniciar sesión</button>
-            </form>
-            <p class="login-footer">¿Aún no tienes cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a></p>
-        </div>
-    </div>
-
-    <div id="appContent" class="hidden">
-        <header class="main-header">
-            <div class="container header-container">
-<a class="logo" href="{% url 'index' %}" style="cursor: pointer; text-decoration: none; color: inherit;">Salud<span>Ya</span></a>
+    <header class="main-header">
+        <div class="container header-container">
+            <h1 class="logo" onclick="window.location.href='Index.html'" style="cursor: pointer;">Salud<span>Ya</span></h1>
+            
+            <nav class="main-nav">
+                <a href="#inicio">Inicio</a>
+                <a href="#funciones">Funciones</a>
+                <!-- NUEVO ENLACE AL HISTORIAL -->
+                <a href="historial.html">Historial</a>
                 
-                <nav class="main-nav">
-                    <a href="#inicio">Inicio</a>
-                    <a href="#funciones">Funciones</a>
-                    <a href="{% url 'marketplace' %}">Marketplace</a>
-                    
-                    <span id="nav-invitado">
-                <a href="{% url 'registro' %}" class="btn-primary" style="cursor: pointer; border: none; display: inline-block; text-align: center;">Probar App</a>
-                    </span>
+                <span id="nav-invitado">
+                    <button onclick="window.location.href='registro.html'" class="btn-primary" style="cursor: pointer; border: none;">Probar App</button>
+                </span>
 
-                    <span id="nav-usuario" style="display: none; margin-left: 15px;">
-                        <span id="saludo-usuario" style="font-weight: 600; color: var(--secondary-color);"></span>
-                        <button onclick="cerrarSesion()" class="btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.85rem; margin-left: 10px; cursor: pointer;">Cerrar Sesión</button>
-                    </span>
-                </nav>
-            </div>
-        </header>
+                <span id="nav-usuario" style="display: none; margin-left: 15px;">
+                    <span id="saludo-usuario" style="font-weight: 600; color: var(--secondary-color);"></span>
+                    <button onclick="cerrarSesion()" class="btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.85rem; margin-left: 10px; cursor: pointer;">Cerrar Sesión</button>
+                </span>
+            </nav>
+        </div>
+    </header>
 
-        <section id="inicio" class="hero-section">
+    <section id="inicio" class="hero-section">
         <div class="container hero-content">
             <h2>Pequeñas acciones constantes para una vida más saludable</h2>
             <p>SaludYa te ayuda a mantener el control de tu bienestar diario con recordatorios amigables y personalizados. ¡Prevenir es cuidar de ti!</p>
             <div class="hero-buttons">
-                <a href="{% url 'registro' %}" class="btn-main" style="cursor: pointer; display: inline-block; text-align: center;">Cuidar de mi hoy.</a>
+                <button onclick="window.location.href='registro.html'" class="btn-main" style="cursor: pointer;">Cuidar de mi hoy.</button>
                 <a href="#funciones" class="btn-secondary">Saber Más</a>
             </div>
         </div>
@@ -66,127 +50,56 @@
                     <div class="icon">💧</div>
                     <h4>Tu momento de hidratación</h4>
                     <p>Un trago de agua te devuelve la energía. Te avisamos suavemente para que nunca te falte.</p>
-                    <a href="{% url 'config_agua' %}" class="btn-secondary" style="margin-top: 15px; width: 100%; display: inline-block; text-align: center;">Ajustar Recordatorio</a>
+                    <button onclick="window.location.href='config-agua.html'" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Ajustar Recordatorio</button>
                 </div>
 
                 <div class="feature-card">
                     <div class="icon">🧘</div>
                     <h4>Pausas Activas</h4>
                     <p>Ejercicios breves y estiramientos para cuidar tu bienestar físico y mental durante el día.</p>
-                    <a href="{% url 'config_ejercicios' %}" class="btn-secondary" style="margin-top: 15px; width: 100%; display: inline-block; text-align: center;">Ver Ejercicios</a>
+                    <button onclick="window.location.href='config-ejercicios.html'" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Ver Ejercicios</button>
                 </div>
 
                 <div class="feature-card">
                     <div class="icon">💊</div>
                     <h4>Control de Medicamentos</h4>
                     <p>Evita olvidos importantes con notificaciones oportunas y un seguimiento estricto.</p>
-                    <a href="{% url 'config_medicinas' %}" class="btn-secondary" style="margin-top: 15px; width: 100%; display: inline-block; text-align: center;">Configurar Dosis</a>
+                    <button onclick="window.location.href='config-medicinas.html'" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Configurar Dosis</button>
                 </div>
-
-                <div class="feature-card">
-                    <div class="icon">📊</div>
-                    <h4>Panel de progreso</h4>
-                    <p>Mide tus hábitos cumplidos con gráficos claros y sigue tus avances día a día.</p>
-                    <a href="{% url 'progreso' %}" class="btn-secondary" style="margin-top: 15px; width: 100%; display: inline-block; text-align: center;">Ver progreso</a>
-                </div>
-
-                <div class="feature-card">
-                    <div class="icon">🎖️</div>
-                    <h4>Gamificación</h4>
-                    <p>Gana insignias por tus logros y mantén la motivación con retos saludables.</p>
-                    <button type="button" onclick="showModal('Gamificación', 'Pronto podrás desbloquear insignias y recompensas mientras completas tus hábitos diarios y mantienes tu motivación.')" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Explorar logros</button>
-                </div>
-
-                <div class="feature-card">
-                    <div class="icon">🛒</div>
-                    <h4>Marketplace SaludYa</h4>
-                    <p>Encuentra productos recomendados para tu bienestar y complementa tu rutina saludable.</p>
-                    <button type="button" onclick="showModal('Marketplace SaludYa', 'Estará disponible una selección recomendada de productos para bienestar, cuidado y hábitos saludables.')" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Ir al Marketplace</button>
-                </div>
-            </div> </div> </section>
-
-    <div id="infoModal" class="modal-overlay" onclick="closeModal(event)">
-        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-            <button class="modal-close" onclick="closeModal(event)">×</button>
-            <h3 id="modalTitle"></h3>
-            <p id="modalMessage"></p>
-            <button class="btn-primary" onclick="closeModal(event)" style="margin-top: 1rem;">Entendido</button>
-        </div>
-    </div>
+            </div> 
+        </div> 
+    </section>
 
     <footer class="main-footer">
         <div class="container">
             <p>&copy; 2026 SaludYa. Promoviendo el autocuidado y la prevención.</p>
         </div>
     </footer>
-    </div>
 
     <script>
-    function mostrarLogin() {
-        const loginPage = document.getElementById('loginPage');
-        const appContent = document.getElementById('appContent');
-        const navUsuario = document.getElementById('nav-usuario');
-
-        loginPage.classList.remove('hidden');
-        appContent.classList.add('hidden');
-        document.body.style.overflow = 'hidden';
-        navUsuario.style.display = 'none';
-    }
-
-    function mostrarApp() {
-        const loginPage = document.getElementById('loginPage');
-        const appContent = document.getElementById('appContent');
+    function verificarSesion() {
+        const usuarioGuardado = localStorage.getItem('usuarioSaludYa');
+        const contenedorInvitado = document.getElementById('nav-invitado');
+        const contenedorUsuario = document.getElementById('nav-usuario');
         const saludoText = document.getElementById('saludo-usuario');
-        const navUsuario = document.getElementById('nav-usuario');
 
-        loginPage.classList.add('hidden');
-        appContent.classList.remove('hidden');
-        document.body.style.overflow = 'auto';
-        navUsuario.style.display = 'inline-block';
-        saludoText.textContent = `¡Hola, ${localStorage.getItem('usuarioSaludYa')}! 👋`;
-    }
-
-    function iniciarSesion(event) {
-        event.preventDefault();
-        const nombre = document.getElementById('loginNombre').value.trim();
-        if (!nombre) {
-            alert('Por favor ingresa tu nombre para iniciar sesión.');
-            return;
+        if (usuarioGuardado) {
+            contenedorInvitado.style.display = 'none';
+            contenedorUsuario.style.display = 'inline-block';
+            saludoText.textContent = `¡Hola, ${usuarioGuardado}! 👋`;
+        } else {
+            contenedorInvitado.style.display = 'inline-block';
+            contenedorUsuario.style.display = 'none';
         }
-        localStorage.setItem('usuarioSaludYa', nombre);
-        alert(`¡Bienvenido de nuevo, ${nombre}!`);
-        mostrarApp();
     }
 
     function cerrarSesion() {
         localStorage.removeItem('usuarioSaludYa');
         alert('Has cerrado sesión. ¡Vuelve pronto a cuidar de tu salud!');
-        mostrarLogin();
+        verificarSesion();
     }
 
-    function showModal(title, message) {
-        document.getElementById('modalTitle').textContent = title;
-        document.getElementById('modalMessage').textContent = message;
-        document.getElementById('infoModal').classList.add('visible');
-    }
-
-    function closeModal(event) {
-        event.stopPropagation();
-        if (event.target.id === 'infoModal' || event.target.classList.contains('modal-close') || event.target.classList.contains('btn-primary')) {
-            document.getElementById('infoModal').classList.remove('visible');
-        }
-    }
-
-    window.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('loginForm').addEventListener('submit', iniciarSesion);
-        const usuarioGuardado = localStorage.getItem('usuarioSaludYa');
-        if (usuarioGuardado) {
-            document.getElementById('loginNombre').value = usuarioGuardado;
-            mostrarApp();
-        } else {
-            mostrarLogin();
-        }
-    });
+    window.onload = verificarSesion;
     </script>
 
 </body>
