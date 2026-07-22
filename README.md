@@ -2,7 +2,7 @@
 
 ##  Equipo "Los Pollitos"
 - **Programación:** Lyane Ashanthy Centeno Campbell, Jose Gabriel Espinoza Corea
-- **Diseño:** Robert Ronbin Ronsel
+- **Diseño:** Robert Robin Ronsel Nicho
 - **Marketing:** Nestor David Centeno Zacarias
 - **Pitch/Oratoria:** Darvis Cruz Carrero Caballero
 
