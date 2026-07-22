@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SaludYa - Registro de Actividades</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
     <style>
         .dashboard-grid {
             display: grid;
@@ -290,5 +291,8 @@
 
         window.onload = cargarDatosDinamicos;
     </script>
+
+    <!-- Script de Notificaciones en Tiempo Real -->
+    <script src="{% static 'saludya_app/js/notificaciones.js' %}"></script>
 </body>
 </html>
