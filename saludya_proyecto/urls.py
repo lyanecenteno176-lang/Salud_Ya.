@@ -19,6 +19,7 @@ from django.urls import path
 from saludya_app.views import (
     index,
     registro,
+    historial,
     config_agua,
     config_ejercicios,
     config_medicinas,
@@ -26,6 +27,7 @@ from saludya_app.views import (
     progreso,
     gamification_dashboard,
     marketplace,
+    market_view,
     product_detail,
     product_create,
     product_edit,
@@ -62,8 +64,12 @@ urlpatterns = [
     path('', index, name='index'),
     path('index.html', index, name='index_html'),
     path('registro.html', registro, name='registro'),
+
     
     # Configuración de hábitos
+
+    path('historial/', historial, name='historial'),
+
     path('config-agua.html', config_agua, name='config_agua'),
     path('config-ejercicios.html', config_ejercicios, name='config_ejercicios'),
     path('config-medicinas.html', config_medicinas, name='config_medicinas'),
@@ -93,9 +99,14 @@ urlpatterns = [
     # APIs de marketplace
     path('api/products/', api_products, name='api_products'),
     path('api/orders/', api_orders, name='api_orders'),
-    
+
     # Marketplace - Productos
     path('marketplace/', marketplace, name='marketplace'),
+
+    path('marketplace/', market_view, name='marketplace'),
+    path('market/', market_view, name='market'),
+    path('marketplace/product/new/', product_create, name='product_create'),
+
     path('marketplace/product/<int:product_id>/', product_detail, name='product_detail'),
     path('marketplace/product/new/', product_create, name='product_create'),
     path('marketplace/product/<int:product_id>/edit/', product_edit, name='product_edit'),

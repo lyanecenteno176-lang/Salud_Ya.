@@ -1,0 +1,323 @@
+{% extends 'saludya_app/Index.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold">
+                🛍 Marketplace SaludYa
+            </h2>
+            <p class="text-muted">
+                Encuentra productos para mejorar tus hábitos saludables.
+            </p>
+        </div>
+
+        {% if user.is_authenticated %}
+        <a href="{% url 'cart' %}" class="btn btn-success">
+
+            🛒 Carrito
+
+            {% if cart %}
+                ({{ cart.items.count }})
+            {% else %}
+                (0)
+            {% endif %}
+
+        </a>
+        {% endif %}
+
+    </div>
+
+    <form method="GET">
+
+        <div class="row mb-4">
+
+            <div class="col-md-5">
+
+                <input
+                    type="text"
+                    class="form-control"
+                    name="search"
+                    placeholder="Buscar producto..."
+                    value="{{ request.GET.search }}"
+                >
+
+            </div>
+
+            <div class="col-md-4">
+
+                <select
+                    class="form-select"
+                    name="category">
+
+                    <option value="">Todas las categorías</option>
+
+                    {% for categoria in categories %}
+
+                    <option
+                        value="{{ categoria.slug }}"
+                        {% if request.GET.category == categoria.slug %}
+                        selected
+                        {% endif %}
+                    >
+
+                        {{ categoria.name }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <button class="btn btn-primary w-100">
+
+                    Buscar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+    {% if featured %}
+
+    <h3 class="mb-3">
+
+        ⭐ Productos Destacados
+
+    </h3>
+
+    <div class="row mb-5">
+
+        {% for producto in featured %}
+
+        <div class="col-md-4 col-lg-3 mb-4">
+
+            <div class="card shadow-sm h-100">
+
+                {% if producto.image_url %}
+
+                <img
+                    src="{{ producto.image_url }}"
+                    class="card-img-top"
+                    style="height:220px;object-fit:cover;"
+                >
+
+                {% else %}
+
+                <img
+                    src="https://via.placeholder.com/400x300?text=SaludYa"
+                    class="card-img-top"
+                    style="height:220px;object-fit:cover;"
+                >
+
+                {% endif %}
+
+                <div class="card-body">
+
+                    <h5>
+
+                        {{ producto.name }}
+
+                    </h5>
+
+                    <p class="text-muted small">
+
+                        {{ producto.description|truncatechars:90 }}
+
+                    </p>
+
+                    <h4 class="text-success">
+
+                        C$ {{ producto.price }}
+
+                    </h4>
+
+                    <p>
+
+                        Stock:
+                        <strong>{{ producto.stock }}</strong>
+
+                    </p>
+
+                    <a
+                        href="{% url 'product_detail' producto.id %}"
+                        class="btn btn-outline-primary w-100 mb-2">
+
+                        Ver producto
+
+                    </a>
+
+                    {% if user.is_authenticated %}
+
+                    <button
+                        class="btn btn-success w-100 agregar-carrito"
+                        data-id="{{ producto.id }}">
+
+                        Agregar al carrito
+
+                    </button>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+    <h3 class="mb-3">
+
+        Todos los productos
+
+    </h3>
+
+    <div class="row">
+
+        {% for producto in products %}
+
+        <div class="col-md-4 col-lg-3 mb-4">
+
+            <div class="card shadow h-100">
+
+                {% if producto.image_url %}
+
+                <img
+                    src="{{ producto.image_url }}"
+                    class="card-img-top"
+                    style="height:220px;object-fit:cover;"
+                >
+
+                {% else %}
+
+                <img
+                    src="https://via.placeholder.com/400x300?text=Producto"
+                    class="card-img-top"
+                    style="height:220px;object-fit:cover;"
+                >
+
+                {% endif %}
+
+                <div class="card-body d-flex flex-column">
+
+                    <h5>
+
+                        {{ producto.name }}
+
+                    </h5>
+
+                    <p class="text-muted small flex-grow-1">
+
+                        {{ producto.description|truncatechars:90 }}
+
+                    </p>
+
+                    <h4 class="text-success">
+
+                        C$ {{ producto.price }}
+
+                    </h4>
+
+                    <small>
+
+                        Categoría:
+                        {{ producto.category.name }}
+
+                    </small>
+
+                    <small>
+
+                        Stock:
+                        {{ producto.stock }}
+
+                    </small>
+
+                    <div class="mt-3">
+
+                        <a
+                            href="{% url 'product_detail' producto.id %}"
+                            class="btn btn-outline-primary w-100 mb-2">
+
+                            Ver detalle
+
+                        </a>
+
+                        {% if user.is_authenticated %}
+
+                        <button
+                            class="btn btn-success w-100 agregar-carrito"
+                            data-id="{{ producto.id }}">
+
+                            🛒 Agregar
+
+                        </button>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+
+            <div class="alert alert-warning">
+
+                No hay productos disponibles.
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<script>
+
+document.querySelectorAll(".agregar-carrito").forEach(btn=>{
+
+    btn.addEventListener("click",function(){
+
+        fetch("/marketplace/add/"+this.dataset.id+"/")
+
+        .then(response=>response.json())
+
+        .then(data=>{
+
+            alert("Producto agregado al carrito.");
+
+            location.reload();
+
+        });
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

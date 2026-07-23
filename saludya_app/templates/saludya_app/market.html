@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace SaludYa</title>
+    <link rel="stylesheet" href="{% static 'saludya_app/market.css' %}">
+</head>
+<body>
+    <div class="market-shell">
+        <header class="market-hero">
+            <div class="market-title-block">
+                <p class="market-label">Marketplace</p>
+                <h1>Marketplace SaludYa</h1>
+                <p class="market-description">
+                    Explora Medicamentos, Ejercicio y Bienestar, y Alimentos Saludables en un solo lugar. Filtra, busca y descubre productos diseñados para tu salud.
+                </p>
+                <a class="market-back-link" href="{% url 'index' %}">Volver a SaludYa</a>
+            </div>
+            <div class="market-hero-actions">
+                <div class="market-search">
+                    <input id="searchInput" type="search" placeholder="Buscar productos en el marketplace...">
+                    <button id="clearSearch" type="button">Limpiar</button>
+                </div>
+                <div class="market-filter-toolbar">
+                    <div class="market-filter-group">
+                        <span class="market-filter-label">Categorías</span>
+                        <div class="market-filters" id="mainCategoryButtons"></div>
+                    </div>
+                    <div class="market-filter-group">
+                        <span class="market-filter-label">Subcategorías</span>
+                        <div class="market-filters" id="subcategoryButtons"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="market-status-bar">
+            <span id="resultInfo">Mostrando todos los productos</span>
+        </section>
+
+        <section class="market-grid" id="productGrid"></section>
+    </div>
+
+    <template id="product-card-template">
+        <article class="product-card">
+            <div class="product-card-top">
+                <img class="product-image" src="" alt="Producto de salud">
+                <span class="product-badge category-badge"></span>
+                <span class="product-tag"></span>
+            </div>
+            <div class="product-body">
+                <h2 class="product-name"></h2>
+                <p class="product-description"></p>
+                <p class="product-category"></p>
+                <div class="product-meta">
+                    <div class="nutrition-list"></div>
+                    <div class="product-flags"></div>
+                </div>
+            </div>
+            <div class="product-footer">
+                <div>
+                    <p class="product-price"></p>
+                    <p class="product-stock"></p>
+                </div>
+                <div class="product-actions">
+                    <button class="btn btn-detail">Ver detalles</button>
+                    <button class="btn btn-add">Agregar al carrito</button>
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <script src="{% static 'saludya_app/market.js' %}"></script>
+</body>
+</html>

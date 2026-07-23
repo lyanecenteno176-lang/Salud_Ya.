@@ -269,6 +269,10 @@ def gamification_dashboard(request):
     
     badges = Badge.objects.filter(user=request.user, achieved=True)
     challenges = UserChallenge.objects.filter(user=request.user, completed=False)
+    profile = _get_profile(request.user) if request.user.is_authenticated else None
+    badge_progress = int((profile.points_total / profile.next_badge_target) * 100) if profile and profile.next_badge_target else 0
+    badges = Badge.objects.filter(user=request.user, achieved=True) if request.user.is_authenticated else Badge.objects.none()
+    challenges = UserChallenge.objects.filter(user=request.user, completed=False) if request.user.is_authenticated else UserChallenge.objects.none()
     rewards = Reward.objects.filter(active=True)
 
     context = {
@@ -277,6 +281,7 @@ def gamification_dashboard(request):
         'badges': badges,
         'challenges': challenges,
         'rewards': rewards,
+        'is_authenticated': request.user.is_authenticated,
     }
     return render(request, 'saludya_app/gamification_dashboard.html', context)
 
@@ -618,6 +623,55 @@ def api_points(request):
     except Exception as e:
         logger.error(f"Error en api_points: {str(e)}")
         return JsonResponse({'error': 'Error al obtener puntos.'}, status=500)
+        }
+})
+
+def historial(request):
+    return render(request, 'saludya_app/historial.html')
+
+
+def api_badges(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'badges': []})
+    badges = Badge.objects.filter(user=request.user)
+    return JsonResponse({'badges': [
+        {
+            'name': badge.name,
+            'description': badge.description,
+            'icon': badge.icon,
+            'condition': badge.condition,
+            'achieved': badge.achieved,
+            'date_awarded': badge.date_awarded.isoformat() if badge.date_awarded else None,
+        }
+        for badge in badges
+    ]})
+
+
+def api_rewards(request):
+    rewards = Reward.objects.filter(active=True)
+    return JsonResponse({'rewards': [
+        {
+            'id': reward.id,
+            'name': reward.name,
+            'description': reward.description,
+            'icon': reward.icon,
+            'cost_points': reward.cost_points,
+            'stock': reward.stock,
+        }
+        for reward in rewards
+    ]})
+
+
+def api_points(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'points_total': 0, 'level': 1, 'next_badge_target': 100})
+    profile = _get_profile(request.user)
+    return JsonResponse({
+        'points_total': profile.points_total,
+        'level': profile.level,
+        'next_badge_target': profile.next_badge_target,
+        'points_to_next_level': profile.points_to_next_level,
+    })
 
 
 def api_progress(request):
@@ -740,6 +794,10 @@ def marketplace(request):
     except Exception as e:
         logger.error(f"Error en marketplace: {str(e)}")
         return render(request, 'saludya_app/marketplace.html', {'error': 'Error al cargar el marketplace.'})
+
+
+def market_view(request):
+    return render(request, 'saludya_app/market.html')
 
 
 def product_detail(request, product_id):
