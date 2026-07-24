@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compra completada - SaludYa</title>
+    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
+</head>
+<body style="background: var(--bg-light); padding: 2rem 0;">
+    <div class="container" style="max-width: 800px; background: white; padding: 2rem; border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,.05);">
+        <h1>✅ Compra confirmada</h1>
+        <p>Tu pedido fue procesado correctamente.</p>
+        {% if order %}
+            <p><strong>Pedido:</strong> #{{ order.id }}</p>
+            <p><strong>Total:</strong> C$ {{ order.total }}</p>
+        {% endif %}
+        <a href="{% url 'marketplace' %}" class="btn-main">Volver al marketplace</a>
+    </div>
+</body>
+</html>

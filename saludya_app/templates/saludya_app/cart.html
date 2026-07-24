@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito - SaludYa</title>
+    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
+</head>
+<body style="background: var(--bg-light); padding: 2rem 0;">
+    <div class="container" style="max-width: 900px; background: white; padding: 2rem; border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,.05);">
+        <h1>🛒 Carrito de compras</h1>
+        <p>Revisa tus productos antes de pagar.</p>
+
+        {% if cart and cart.items.all %}
+            <ul style="list-style:none; padding:0; margin:1rem 0;">
+                {% for item in cart.items.all %}
+                    <li style="padding:1rem; border:1px solid #e5e5e5; border-radius:12px; margin-bottom:1rem;">
+                        <strong>{{ item.product.name }}</strong> — {{ item.quantity }} x C$ {{ item.product.price }}
+                    </li>
+                {% endfor %}
+            </ul>
+            <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+                <a href="{% url 'checkout' %}" class="btn-main">Continuar al checkout</a>
+                <a href="{% url 'marketplace' %}" class="btn-secondary">Volver al marketplace</a>
+            </div>
+        {% else %}
+            <div class="alert alert-warning">Tu carrito está vacío.</div>
+            <a href="{% url 'marketplace' %}" class="btn-main">Explorar marketplace</a>
+        {% endif %}
+    </div>
+</body>
+</html>

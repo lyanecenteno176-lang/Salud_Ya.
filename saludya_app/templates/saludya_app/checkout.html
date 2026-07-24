@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - SaludYa</title>
+    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
+</head>
+<body style="background: var(--bg-light); padding: 2rem 0;">
+    <div class="container" style="max-width: 900px; background: white; padding: 2rem; border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,.05);">
+        <h1>💳 Checkout</h1>
+        <p>Resumen de la compra y método de pago.</p>
+
+        {% if cart and cart.items.all %}
+            <ul style="list-style:none; padding:0; margin:1rem 0;">
+                {% for item in cart.items.all %}
+                    <li style="padding:.8rem 0; border-bottom:1px solid #eee;">
+                        {{ item.product.name }} x {{ item.quantity }} — C$ {{ item.product.price }}
+                    </li>
+                {% endfor %}
+            </ul>
+            <p><strong>Puntos disponibles:</strong> {{ points_available|default:0 }}</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="coupon_code">Cupón</label>
+                    <input type="text" id="coupon_code" name="coupon_code" placeholder="Código de cupón">
+                </div>
+                <div class="form-group">
+                    <label for="points_redeem">Puntos a usar</label>
+                    <input type="number" id="points_redeem" name="points_redeem" min="0" value="0">
+                </div>
+                <button type="submit" class="btn-main">Confirmar compra</button>
+            </form>
+        {% else %}
+            <div class="alert alert-warning">No puedes pagar si tu carrito está vacío.</div>
+            <a href="{% url 'marketplace' %}" class="btn-main">Volver al marketplace</a>
+        {% endif %}
+    </div>
+</body>
+</html>

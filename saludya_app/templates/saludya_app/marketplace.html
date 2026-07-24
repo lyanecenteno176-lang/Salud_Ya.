@@ -1,323 +1,112 @@
-{% extends 'saludya_app/Index.html' %}
-{% load static %}
-
-{% block content %}
-
-<div class="container mt-4">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <div>
-            <h2 class="fw-bold">
-                🛍 Marketplace SaludYa
-            </h2>
-            <p class="text-muted">
-                Encuentra productos para mejorar tus hábitos saludables.
-            </p>
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace SaludYa</title>
+    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
+    <style>
+        body { background: var(--bg-light); }
+        .market-shell { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem 3rem; }
+        .market-header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; }
+        .market-card { background: white; border-radius: 16px; padding: 1rem; box-shadow: 0 8px 18px rgba(0,0,0,.06); }
+        .market-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; }
+        .market-card h3 { margin: .8rem 0 .4rem; }
+        .market-card .price { color: #0a8f63; font-weight: 700; }
+        .market-filters { display: grid; grid-template-columns: 2fr 1fr auto; gap: .75rem; margin-bottom: 1.5rem; }
+        @media (max-width: 700px) {
+            .market-filters { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="market-shell">
+        <div class="market-header">
+            <div>
+                <h1>🛍 Marketplace SaludYa</h1>
+                <p>Encuentra productos para mejorar tus hábitos saludables.</p>
+            </div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'cart' %}" class="btn-main">🛒 Carrito {% if cart %}({{ cart.items.count }}){% else %}(0){% endif %}</a>
+            {% endif %}
         </div>
 
-        {% if user.is_authenticated %}
-        <a href="{% url 'cart' %}" class="btn btn-success">
+        <form method="GET" class="market-filters">
+            <input type="text" name="search" placeholder="Buscar producto..." value="{{ request.GET.search }}">
+            <select name="category">
+                <option value="">Todas las categorías</option>
+                {% for categoria in categories %}
+                    <option value="{{ categoria.slug }}" {% if request.GET.category == categoria.slug %}selected{% endif %}>{{ categoria.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn-secondary">Buscar</button>
+        </form>
 
-            🛒 Carrito
-
-            {% if cart %}
-                ({{ cart.items.count }})
-            {% else %}
-                (0)
-            {% endif %}
-
-        </a>
+        {% if featured %}
+            <h2>⭐ Productos destacados</h2>
+            <div class="market-grid" style="margin-bottom: 2rem;">
+                {% for producto in featured %}
+                    <div class="market-card">
+                        {% if producto.image_url %}
+                            <img src="{{ producto.image_url }}" alt="{{ producto.name }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/400x300?text=SaludYa" alt="{{ producto.name }}">
+                        {% endif %}
+                        <h3>{{ producto.name }}</h3>
+                        <p>{{ producto.description|truncatechars:90 }}</p>
+                        <div class="price">C$ {{ producto.price }}</div>
+                        <p>Stock: {{ producto.stock }}</p>
+                        <a href="{% url 'product_detail' producto.id %}" class="btn-secondary" style="display:inline-block; margin-bottom:.5rem;">Ver detalle</a>
+                        {% if user.is_authenticated %}
+                            <button class="btn-main agregar-carrito" data-id="{{ producto.id }}">Agregar al carrito</button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
 
-    </div>
-
-    <form method="GET">
-
-        <div class="row mb-4">
-
-            <div class="col-md-5">
-
-                <input
-                    type="text"
-                    class="form-control"
-                    name="search"
-                    placeholder="Buscar producto..."
-                    value="{{ request.GET.search }}"
-                >
-
-            </div>
-
-            <div class="col-md-4">
-
-                <select
-                    class="form-select"
-                    name="category">
-
-                    <option value="">Todas las categorías</option>
-
-                    {% for categoria in categories %}
-
-                    <option
-                        value="{{ categoria.slug }}"
-                        {% if request.GET.category == categoria.slug %}
-                        selected
-                        {% endif %}
-                    >
-
-                        {{ categoria.name }}
-
-                    </option>
-
-                    {% endfor %}
-
-                </select>
-
-            </div>
-
-            <div class="col-md-3">
-
-                <button class="btn btn-primary w-100">
-
-                    Buscar
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </form>
-
-    {% if featured %}
-
-    <h3 class="mb-3">
-
-        ⭐ Productos Destacados
-
-    </h3>
-
-    <div class="row mb-5">
-
-        {% for producto in featured %}
-
-        <div class="col-md-4 col-lg-3 mb-4">
-
-            <div class="card shadow-sm h-100">
-
-                {% if producto.image_url %}
-
-                <img
-                    src="{{ producto.image_url }}"
-                    class="card-img-top"
-                    style="height:220px;object-fit:cover;"
-                >
-
-                {% else %}
-
-                <img
-                    src="https://via.placeholder.com/400x300?text=SaludYa"
-                    class="card-img-top"
-                    style="height:220px;object-fit:cover;"
-                >
-
-                {% endif %}
-
-                <div class="card-body">
-
-                    <h5>
-
-                        {{ producto.name }}
-
-                    </h5>
-
-                    <p class="text-muted small">
-
-                        {{ producto.description|truncatechars:90 }}
-
-                    </p>
-
-                    <h4 class="text-success">
-
-                        C$ {{ producto.price }}
-
-                    </h4>
-
-                    <p>
-
-                        Stock:
-                        <strong>{{ producto.stock }}</strong>
-
-                    </p>
-
-                    <a
-                        href="{% url 'product_detail' producto.id %}"
-                        class="btn btn-outline-primary w-100 mb-2">
-
-                        Ver producto
-
-                    </a>
-
-                    {% if user.is_authenticated %}
-
-                    <button
-                        class="btn btn-success w-100 agregar-carrito"
-                        data-id="{{ producto.id }}">
-
-                        Agregar al carrito
-
-                    </button>
-
+        <h2>Todos los productos</h2>
+        <div class="market-grid">
+            {% for producto in products %}
+                <div class="market-card">
+                    {% if producto.image_url %}
+                        <img src="{{ producto.image_url }}" alt="{{ producto.name }}">
+                    {% else %}
+                        <img src="{% static 'saludya_app/images/Avena-Integral.jpg' %}" alt="{{ producto.name }}">
                     {% endif %}
-
+                    <h3>{{ producto.name }}</h3>
+                    <p>{{ producto.description|truncatechars:90 }}</p>
+                    <div class="price">C$ {{ producto.price }}</div>
+                    <p>Categoría: {{ producto.category.name }}</p>
+                    <p>Stock: {{ producto.stock }}</p>
+                    <a href="{% url 'product_detail' producto.id %}" class="btn-secondary" style="display:inline-block; margin-bottom:.5rem;">Ver detalle</a>
+                    {% if user.is_authenticated %}
+                        <button class="btn-main agregar-carrito" data-id="{{ producto.id }}">🛒 Agregar</button>
+                    {% endif %}
                 </div>
-
-            </div>
-
+            {% empty %}
+                <div class="market-card" style="grid-column: 1 / -1;">
+                    <p>No hay productos disponibles.</p>
+                </div>
+            {% endfor %}
         </div>
-
-        {% endfor %}
-
     </div>
 
-    {% endif %}
-
-    <h3 class="mb-3">
-
-        Todos los productos
-
-    </h3>
-
-    <div class="row">
-
-        {% for producto in products %}
-
-        <div class="col-md-4 col-lg-3 mb-4">
-
-            <div class="card shadow h-100">
-
-                {% if producto.image_url %}
-
-                <img
-                    src="{{ producto.image_url }}"
-                    class="card-img-top"
-                    style="height:220px;object-fit:cover;"
-                >
-
-                {% else %}
-
-                <img
-                    src="https://via.placeholder.com/400x300?text=Producto"
-                    class="card-img-top"
-                    style="height:220px;object-fit:cover;"
-                >
-
-                {% endif %}
-
-                <div class="card-body d-flex flex-column">
-
-                    <h5>
-
-                        {{ producto.name }}
-
-                    </h5>
-
-                    <p class="text-muted small flex-grow-1">
-
-                        {{ producto.description|truncatechars:90 }}
-
-                    </p>
-
-                    <h4 class="text-success">
-
-                        C$ {{ producto.price }}
-
-                    </h4>
-
-                    <small>
-
-                        Categoría:
-                        {{ producto.category.name }}
-
-                    </small>
-
-                    <small>
-
-                        Stock:
-                        {{ producto.stock }}
-
-                    </small>
-
-                    <div class="mt-3">
-
-                        <a
-                            href="{% url 'product_detail' producto.id %}"
-                            class="btn btn-outline-primary w-100 mb-2">
-
-                            Ver detalle
-
-                        </a>
-
-                        {% if user.is_authenticated %}
-
-                        <button
-                            class="btn btn-success w-100 agregar-carrito"
-                            data-id="{{ producto.id }}">
-
-                            🛒 Agregar
-
-                        </button>
-
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        {% empty %}
-
-        <div class="col-12">
-
-            <div class="alert alert-warning">
-
-                No hay productos disponibles.
-
-            </div>
-
-        </div>
-
-        {% endfor %}
-
-    </div>
-
-</div>
-
-<script>
-
-document.querySelectorAll(".agregar-carrito").forEach(btn=>{
-
-    btn.addEventListener("click",function(){
-
-        fetch("/marketplace/add/"+this.dataset.id+"/")
-
-        .then(response=>response.json())
-
-        .then(data=>{
-
-            alert("Producto agregado al carrito.");
-
-            location.reload();
-
+    <script>
+        document.querySelectorAll('.agregar-carrito').forEach(function(btn){
+            btn.addEventListener('click', function(){
+                fetch('/marketplace/cart/add/' + this.dataset.id + '/').then(function(response){
+                    return response.json();
+                }).then(function(data){
+                    alert(data.message || 'Producto agregado al carrito.');
+                    location.reload();
+                }).catch(function(){
+                    alert('No se pudo agregar el producto.');
+                });
+            });
         });
-
-    });
-
-});
-
-</script>
-
-{% endblock %}
+    </script>
+</body>
+</html>

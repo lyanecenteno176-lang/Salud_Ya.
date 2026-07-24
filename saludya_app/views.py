@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.db.models import Q
 from django.utils.text import slugify
+from django.templatetags.static import static
+from django.contrib.auth import authenticate, login, logout
 from .models import (
     Habit,
     HabitEntry,
@@ -29,6 +31,30 @@ import datetime
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+def _normalize_product_image_url(product):
+    """Mapea imágenes de marketplace a rutas locales reales del proyecto."""
+    local_image_map = {
+        'Tazón energético de avena integral': 'saludya_app/images/Avena-Integral.jpg',
+        'Smoothie verde detox': 'saludya_app/images/Espinaca.jpg',
+        'Barritas de granola caseras': 'saludya_app/images/Almendras.jpg',
+        'Pack de suplementos orgánicos': 'saludya_app/images/Vitamina-C-1000-mg.jpg',
+        'Jarabe natural para la tos': 'saludya_app/images/Jarabe-Antigripal-Multicitrico.jpg',
+        'Botiquín básico farmacéutico': 'saludya_app/images/Gel-Antibacterial.jpg',
+        'Clases de yoga online': 'saludya_app/images/Tapete de Yoga.jpg',
+        'Membresía de gimnasio mensual': 'saludya_app/images/Bandas-de-Resistencia.jpg',
+        'Sesión de spa y masaje relajante': 'saludya_app/images/Toalla-Deportiva.jpg',
+        'Terapia psicológica inicial': 'saludya_app/images/Botella-Deportiva-1-L.jpg',
+    }
+
+    if not product.image_url:
+        return static(local_image_map.get(product.name, 'saludya_app/images/Avena-Integral.jpg'))
+
+    if product.image_url.startswith('http'):
+        return static(local_image_map.get(product.name, 'saludya_app/images/Avena-Integral.jpg'))
+
+    return product.image_url
 
 
 def _escape_pdf_text(text):
@@ -76,6 +102,33 @@ def index(request):
 def registro(request):
     """Página de registro de usuarios."""
     return render(request, 'saludya_app/registro.html')
+
+def login_view(request):
+    """Inicio de sesión de usuarios."""
+
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
+
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            return render(
+                request,
+                'saludya_app/login.html',
+                {
+                    'error': 'Usuario o contraseña incorrectos'
+                }
+            )
+
+    return render(request, 'saludya_app/login.html')
 
 
 def config_agua(request):
@@ -623,9 +676,7 @@ def api_points(request):
     except Exception as e:
         logger.error(f"Error en api_points: {str(e)}")
         return JsonResponse({'error': 'Error al obtener puntos.'}, status=500)
-        }
-})
-
+    
 def historial(request):
     return render(request, 'saludya_app/historial.html')
 
@@ -772,7 +823,7 @@ def marketplace(request):
         min_price = request.GET.get('min_price')
         max_price = request.GET.get('max_price')
         search = request.GET.get('search')
-        
+
         if category_slug:
             products = products.filter(category__slug=category_slug)
         if min_price:
@@ -781,6 +832,15 @@ def marketplace(request):
             products = products.filter(price__lte=max_price)
         if search:
             products = products.filter(Q(name__icontains=search) | Q(description__icontains=search))
+
+        for product in products:
+            product.image_url = _normalize_product_image_url(product)
+
+        for product in featured:
+            product.image_url = _normalize_product_image_url(product)
+
+        for product in recommended:
+            product.image_url = _normalize_product_image_url(product)
 
         cart = _get_user_cart(request.user) if request.user.is_authenticated else None
         context = {
@@ -804,6 +864,7 @@ def product_detail(request, product_id):
     """Detalle de un producto."""
     try:
         product = get_object_or_404(Product, pk=product_id)
+        product.image_url = _normalize_product_image_url(product)
         reviews = ProductReview.objects.filter(product=product)
         cart = _get_user_cart(request.user) if request.user.is_authenticated else None
         return render(request, 'saludya_app/product_detail.html', {

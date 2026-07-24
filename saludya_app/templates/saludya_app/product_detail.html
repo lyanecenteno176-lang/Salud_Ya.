@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} - SaludYa</title>
+    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
+</head>
+<body style="background: var(--bg-light); padding: 2rem 0;">
+    <div class="container" style="max-width: 900px; background: white; padding: 2rem; border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,.05);">
+        <h1>{{ product.name }}</h1>
+        <p>{{ product.description }}</p>
+        <p><strong>Precio:</strong> C$ {{ product.price }}</p>
+        <p><strong>Stock:</strong> {{ product.stock }}</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'cart' %}" class="btn-main">Ir al carrito</a>
+        {% endif %}
+        <a href="{% url 'marketplace' %}" class="btn-secondary">Volver al marketplace</a>
+    </div>
+</body>
+</html>

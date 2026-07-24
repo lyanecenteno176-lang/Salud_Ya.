@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SaludYa - Tu Compañero de Bienestar Diario</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
 </head>
 <body>
 
@@ -100,7 +101,7 @@
                     <div class="icon">🛒</div>
                     <h4>Marketplace SaludYa</h4>
                     <p>Encuentra productos recomendados para tu bienestar y complementa tu rutina saludable.</p>
-                    <button type="button" onclick="showModal('Marketplace SaludYa', 'Estará disponible una selección recomendada de productos para bienestar, cuidado y hábitos saludables.')" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Ir al Marketplace</button>
+                    <a href="{% url 'marketplace' %}" class="btn-secondary" style="margin-top: 15px; width: 100%; display: inline-block; text-align: center;">Ir al Marketplace</a>
                 </div>
             </div> 
         </div> 
@@ -114,6 +115,36 @@
     </div>
 
     <script>
+    function showModal(title, message) {
+        alert(`${title}\n\n${message}`);
+    }
+
+    function mostrarLogin() {
+        const loginPage = document.getElementById('loginPage');
+        const appContent = document.getElementById('appContent');
+        if (loginPage) loginPage.style.display = 'flex';
+        if (appContent) appContent.classList.add('hidden');
+    }
+
+    function mostrarApp() {
+        const loginPage = document.getElementById('loginPage');
+        const appContent = document.getElementById('appContent');
+        if (loginPage) loginPage.style.display = 'none';
+        if (appContent) appContent.classList.remove('hidden');
+        verificarSesion();
+    }
+
+    function iniciarSesion(event) {
+        event.preventDefault();
+        const nombre = document.getElementById('loginNombre').value.trim();
+        if (!nombre) {
+            alert('Ingresa tu nombre para continuar.');
+            return;
+        }
+        localStorage.setItem('usuarioSaludYa', nombre);
+        mostrarApp();
+    }
+
     function verificarSesion() {
         const usuarioGuardado = localStorage.getItem('usuarioSaludYa');
         const contenedorInvitado = document.getElementById('nav-invitado');
@@ -133,11 +164,15 @@
     function cerrarSesion() {
         localStorage.removeItem('usuarioSaludYa');
         alert('Has cerrado sesión. ¡Vuelve pronto a cuidar de tu salud!');
-        verificarSesion();
+        mostrarLogin();
     }
 
     window.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('loginForm').addEventListener('submit', iniciarSesion);
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', iniciarSesion);
+        }
+
         const usuarioGuardado = localStorage.getItem('usuarioSaludYa');
         if (usuarioGuardado) {
             document.getElementById('loginNombre').value = usuarioGuardado;

@@ -19,6 +19,7 @@ from django.urls import path
 from saludya_app.views import (
     index,
     registro,
+    login_view,
     historial,
     config_agua,
     config_ejercicios,
@@ -63,6 +64,7 @@ urlpatterns = [
     # Páginas principales
     path('', index, name='index'),
     path('index.html', index, name='index_html'),
+    path('login/', login_view, name='login'),
     path('registro.html', registro, name='registro'),
 
     
@@ -102,9 +104,7 @@ urlpatterns = [
 
     # Marketplace - Productos
     path('marketplace/', marketplace, name='marketplace'),
-
-    path('marketplace/', market_view, name='marketplace'),
-    path('market/', market_view, name='market'),
+    path('market/', marketplace, name='market'),
     path('marketplace/product/new/', product_create, name='product_create'),
 
     path('marketplace/product/<int:product_id>/', product_detail, name='product_detail'),
