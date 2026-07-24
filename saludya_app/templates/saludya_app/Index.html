@@ -1,187 +1,1223 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaludYa - Tu Compañero de Bienestar Diario</title>
+
+    <title>SaludYa | Tu compañero de bienestar</title>
+
     <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
 
-    <div id="loginPage" class="login-page" style="display: flex !important; position: fixed !important; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; z-index: 1000000 !important; overflow: hidden; background: linear-gradient(135deg, #bde6df 0%, #e7f6f3 100%);">
-        <div class="login-card">
-            <h2>Bienvenido a SaludYa</h2>
-            <p>Inicia sesión para acceder a tus funciones de bienestar.</p>
-            <form id="loginForm" class="login-form">
-                <div class="form-group">
-                    <label for="loginNombre">Nombre</label>
-                    <input type="text" id="loginNombre" placeholder="Ingresa tu nombre" required>
-                </div>
-                <button type="submit" class="btn-submit">Iniciar sesión</button>
-            </form>
-            <p class="login-footer">¿Aún no tienes cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a></p>
-        </div>
-    </div>
+<!--====================================
+            LOGIN
+=====================================-->
 
-    <div id="appContent" class="hidden">
-        <header class="main-header">
-            <div class="container header-container">
-<a class="logo" href="{% url 'index' %}" style="cursor: pointer; text-decoration: none; color: inherit;">Salud<span>Ya</span></a>
-                
-                <nav class="main-nav">
-                    <a href="#inicio">Inicio</a>
-                    <a href="#funciones">Funciones</a>
-                    <a href="{% url 'marketplace' %}">Marketplace</a>
-                    
-                    <span id="nav-invitado">
-                <a href="{% url 'registro' %}" class="btn-primary" style="cursor: pointer; border: none; display: inline-block; text-align: center;">Probar App</a>
-                    </span>
+<div id="loginPage" class="login-page">
 
-                <span id="nav-usuario" style="display: none; margin-left: 15px;">
-                    <span id="saludo-usuario" style="font-weight: 600; color: var(--secondary-color);"></span>
-                    <button onclick="cerrarSesion()" class="btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.85rem; margin-left: 10px; cursor: pointer;">Cerrar Sesión</button>
-                </span>
-            </nav>
-        </div>
-    </header>
+    <div class="login-card">
 
-        <section id="inicio" class="hero-section">
-        <div class="container hero-content">
-            <h2>Pequeñas acciones constantes para una vida más saludable</h2>
-            <p>SaludYa te ayuda a mantener el control de tu bienestar diario con recordatorios amigables y personalizados. ¡Prevenir es cuidar de ti!</p>
-            <div class="hero-buttons">
-                <button onclick="window.location.href='registro.html'" class="btn-main" style="cursor: pointer;">Cuidar de mi hoy.</button>
-                <a href="#funciones" class="btn-secondary">Saber Más</a>
+        <h2>Bienvenido a SaludYa</h2>
+
+        <p>
+
+            Tu asistente personal para crear hábitos saludables,
+            controlar medicamentos y mejorar tu bienestar diario.
+
+        </p>
+
+        <form id="loginForm" class="login-form">
+
+            <div class="form-group">
+
+                <label for="loginNombre">
+
+                    Nombre
+
+                </label>
+
+                <input
+                    type="text"
+                    id="loginNombre"
+                    placeholder="Ingresa tu nombre"
+                    required>
+
             </div>
-        </div>
-    </section>
 
-    <section id="funciones" class="features-section">
-        <div class="container">
-            <h3 class="section-title">¿Cómo te ayuda SaludYa?</h3>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="icon">💧</div>
-                    <h4>Tu momento de hidratación</h4>
-                    <p>Un trago de agua te devuelve la energía. Te avisamos suavemente para que nunca te falte.</p>
-                    <button onclick="window.location.href='config-agua.html'" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Ajustar Recordatorio</button>
-                </div>
+            <button
+                class="btn-submit"
+                type="submit">
 
-                <div class="feature-card">
-                    <div class="icon">🧘</div>
-                    <h4>Pausas Activas</h4>
-                    <p>Ejercicios breves y estiramientos para cuidar tu bienestar físico y mental durante el día.</p>
-                    <button onclick="window.location.href='config-ejercicios.html'" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Ver Ejercicios</button>
-                </div>
+                Iniciar Sesión
 
-                <div class="feature-card">
-                    <div class="icon">💊</div>
-                    <h4>Control de Medicamentos</h4>
-                    <p>Evita olvidos importantes con notificaciones oportunas y un seguimiento estricto.</p>
-                    <a href="{% url 'config_medicinas' %}" class="btn-secondary" style="margin-top: 15px; width: 100%; display: inline-block; text-align: center;">Configurar Dosis</a>
-                </div>
+            </button>
 
-                <div class="feature-card">
-                    <div class="icon">📊</div>
-                    <h4>Panel de progreso</h4>
-                    <p>Mide tus hábitos cumplidos con gráficos claros y sigue tus avances día a día.</p>
-                    <a href="{% url 'progreso' %}" class="btn-secondary" style="margin-top: 15px; width: 100%; display: inline-block; text-align: center;">Ver progreso</a>
-                </div>
+        </form>
 
-                <div class="feature-card">
-                    <div class="icon">🎖️</div>
-                    <h4>Gamificación</h4>
-                    <p>Gana insignias por tus logros y mantén la motivación con retos saludables.</p>
-                    <button type="button" onclick="showModal('Gamificación', 'Pronto podrás desbloquear insignias y recompensas mientras completas tus hábitos diarios y mantienes tu motivación.')" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Explorar logros</button>
-                </div>
+        <p class="login-footer">
 
-                <div class="feature-card">
-                    <div class="icon">🛒</div>
-                    <h4>Marketplace SaludYa</h4>
-                    <p>Encuentra productos recomendados para tu bienestar y complementa tu rutina saludable.</p>
-                    <a href="{% url 'marketplace' %}" class="btn-secondary" style="margin-top: 15px; width: 100%; display: inline-block; text-align: center;">Ir al Marketplace</a>
-                </div>
-            </div> 
-        </div> 
-    </section>
+            ¿No tienes cuenta?
 
-    <footer class="main-footer">
-        <div class="container">
-            <p>&copy; 2026 SaludYa. Promoviendo el autocuidado y la prevención.</p>
-        </div>
-    </footer>
+            <a href="{% url 'registro' %}">
+
+                Crear una cuenta
+
+            </a>
+
+        </p>
+
     </div>
 
-    <script>
-    function showModal(title, message) {
-        alert(`${title}\n\n${message}`);
+</div>
+
+<!--====================================
+          CONTENIDO APP
+=====================================-->
+
+<div id="appContent" class="hidden">
+
+<header class="main-header">
+
+<div class="container header-container">
+
+<a
+class="logo"
+href="{% url 'index' %}">
+
+Salud<span>Ya</span>
+
+</a>
+
+<nav class="main-nav">
+
+<a href="#inicio">
+
+Inicio
+
+</a>
+
+<a href="#funciones">
+
+Funciones
+
+</a>
+
+<a href="{% url 'marketplace' %}">
+
+Marketplace
+
+</a>
+
+<a href="{% url 'progreso' %}">
+
+Progreso
+
+</a>
+
+<a href="{% url 'historial' %}">
+
+Historial
+
+</a>
+
+<span id="nav-invitado">
+
+<a
+href="{% url 'registro' %}"
+class="btn-primary">
+
+Probar App
+
+</a>
+
+</span>
+
+<span
+id="nav-usuario"
+style="display:none;">
+
+<span id="saludo-usuario"></span>
+
+<button
+onclick="cerrarSesion()"
+class="btn-secondary">
+
+Cerrar sesión
+
+</button>
+
+</span>
+
+</nav>
+
+</div>
+
+</header>
+
+<!--====================================
+            HERO
+=====================================-->
+
+<section
+id="inicio"
+class="hero-section">
+
+<div class="container">
+
+<div class="hero-content">
+
+<h2>
+Pequeñas acciones,<br>
+grandes cambios<br>
+en tu salud.
+</h2>
+
+<p>
+
+        SaludYa te ayuda a mantener hábitos saludables,
+
+        recordar medicamentos,
+
+        controlar tu hidratación,
+
+        registrar ejercicios y
+
+        visualizar tu progreso diario desde un solo lugar.
+
+</p>
+
+<div class="hero-buttons">
+
+<a
+href="{% url 'registro' %}"
+class="btn-main">
+
+Comenzar ahora
+
+</a>
+
+<a
+href="#funciones"
+class="btn-secondary">
+
+Descubrir funciones
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!--====================================
+        ESTADISTICAS
+=====================================-->
+
+<section class="features-section">
+
+<div class="container">
+
+<h2 class="section-title">
+
+SaludYa en números
+
+</h2>
+
+<div class="dashboard-overview">
+
+<div class="overview-card">
+
+<h3>
+
+💧 Recordatorios
+
+</h3>
+
+<strong>
+
+15 000+
+
+</strong>
+
+<p>
+
+Notificaciones enviadas
+
+</p>
+
+</div>
+
+<div class="overview-card">
+
+<h3>
+
+❤️ Usuarios
+
+</h3>
+
+<strong>
+
+1 200+
+
+</strong>
+
+<p>
+
+Personas activas
+
+</p>
+
+</div>
+
+<div class="overview-card">
+
+<h3>
+
+🏆 Hábitos
+
+</h3>
+
+<strong>
+
+95%
+
+</strong>
+
+<p>
+
+Objetivos cumplidos
+
+</p>
+
+</div>
+
+<div class="overview-card">
+
+<h3>
+
+⭐ Marketplace
+
+</h3>
+
+<strong>
+
+300+
+
+</strong>
+
+<p>
+
+Productos saludables
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+<!--====================================
+        ¿POR QUÉ ELEGIR SALUDYA?
+=====================================-->
+
+<section id="funciones" class="features-section">
+
+    <div class="container">
+
+        <h2 class="section-title">
+
+            ¿Por qué elegir SaludYa?
+
+        </h2>
+
+        <div class="features-grid">
+
+            <div class="feature-card">
+
+                <div class="icon">💧</div>
+
+                <h4>Hidratación Inteligente</h4>
+
+                <p>
+
+                    Configura recordatorios personalizados para mantener una
+                    hidratación adecuada durante todo el día.
+
+                </p>
+
+                <a href="{% url 'config_agua' %}" class="btn-secondary">
+
+                    Configurar
+
+                </a>
+
+            </div>
+
+            <div class="feature-card">
+
+                <div class="icon">💊</div>
+
+                <h4>Medicamentos</h4>
+
+                <p>
+
+                    Nunca vuelvas a olvidar una dosis gracias a recordatorios
+                    inteligentes adaptados a tu horario.
+
+                </p>
+
+                <a href="{% url 'config_medicinas' %}" class="btn-secondary">
+
+                    Administrar
+
+                </a>
+
+            </div>
+
+            <div class="feature-card">
+
+                <div class="icon">🧘</div>
+
+                <h4>Pausas Activas</h4>
+
+                <p>
+
+                    Reduce el estrés y mejora tu bienestar realizando
+                    ejercicios rápidos durante la jornada.
+
+                </p>
+
+                <a href="{% url 'config_ejercicios' %}" class="btn-secondary">
+
+                    Ver ejercicios
+
+                </a>
+
+            </div>
+
+            <div class="feature-card">
+
+                <div class="icon">📈</div>
+
+                <h4>Panel de Progreso</h4>
+
+                <p>
+
+                    Consulta tus estadísticas, hábitos cumplidos y evolución
+                    diaria mediante gráficos claros.
+
+                </p>
+
+                <a href="{% url 'progreso' %}" class="btn-secondary">
+
+                    Ver progreso
+
+                </a>
+
+            </div>
+
+            <div class="feature-card">
+
+                <div class="icon">🏆</div>
+
+                <h4>Gamificación</h4>
+
+                <p>
+
+                    Gana puntos, desbloquea insignias y mantén la motivación
+                    mientras mejoras tu salud.
+
+                </p>
+
+                <button
+                    class="btn-secondary"
+                    onclick="showModal('Gamificación','Muy pronto podrás desbloquear recompensas e insignias.')">
+
+                    Explorar
+
+                </button>
+
+            </div>
+
+            <div class="feature-card">
+
+                <div class="icon">🛒</div>
+
+                <h4>Marketplace</h4>
+
+                <p>
+
+                    Descubre productos seleccionados para mejorar tu bienestar
+                    y complementar tus hábitos saludables.
+
+                </p>
+
+                <a href="{% url 'marketplace' %}" class="btn-secondary">
+
+                    Ir al Marketplace
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!--====================================
+        BENEFICIOS
+=====================================-->
+
+<section class="features-section">
+
+<div class="container">
+
+<h2 class="section-title">
+
+Todo lo que necesitas
+en una sola aplicación
+
+</h2>
+
+<div class="dashboard-overview">
+
+<div class="overview-card">
+
+<h3>
+
+❤️ Salud
+
+</h3>
+
+<p>
+
+Organiza todos tus hábitos saludables
+desde una única plataforma.
+
+</p>
+
+</div>
+
+<div class="overview-card">
+
+<h3>
+
+⏰ Recordatorios
+
+</h3>
+
+<p>
+
+Notificaciones inteligentes para
+medicamentos, agua y ejercicio.
+
+</p>
+
+</div>
+
+<div class="overview-card">
+
+<h3>
+
+📊 Estadísticas
+
+</h3>
+
+<p>
+
+Visualiza tu progreso mediante
+gráficos fáciles de entender.
+
+</p>
+
+</div>
+
+<div class="overview-card">
+
+<h3>
+
+🏅 Motivación
+
+</h3>
+
+<p>
+
+Obtén insignias y recompensas
+por mantener buenos hábitos.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!--====================================
+        MARKETPLACE DESTACADO
+=====================================-->
+
+<section class="features-section">
+
+<div class="container">
+
+<h2 class="section-title">
+
+Productos Destacados
+
+</h2>
+
+<div class="product-grid">
+
+<div class="product-card">
+
+<img src="{% static 'saludya_app/images/Agua-Mineral.jpg' %}" alt="Botella">
+
+<div class="product-card-body">
+
+<h3>Agua Mineral</h3>
+
+<p>
+
+Mantente hidratado con agua
+mineral de alta calidad.
+
+</p>
+
+<p class="price">
+
+C$ 35
+
+</p>
+
+<a
+href="{% url 'marketplace' %}"
+class="btn-primary">
+
+Ver Producto
+
+</a>
+
+</div>
+
+</div>
+
+<div class="product-card">
+
+<img src="{% static 'saludya_app/images/Agua-de-Coco.jpg' %}" alt="Agua de coco">
+
+<div class="product-card-body">
+
+<h3>Agua de Coco</h3>
+
+<p>
+
+Ideal para recuperar electrolitos
+después del ejercicio.
+
+</p>
+
+<p class="price">
+
+C$ 65
+
+</p>
+
+<a
+href="{% url 'marketplace' %}"
+class="btn-primary">
+
+Ver Producto
+
+</a>
+
+</div>
+
+</div>
+
+<div class="product-card">
+
+<img src="{% static 'saludya_app/images/Vitamina-C.jpg' %}" alt="Vitamina C">
+
+<div class="product-card-body">
+
+<h3>Vitamina C</h3>
+
+<p>
+
+Refuerza tu sistema inmunológico
+todos los días.
+
+</p>
+
+<p class="price">
+
+C$ 280
+
+</p>
+
+<a
+href="{% url 'marketplace' %}"
+class="btn-primary">
+
+Ver Producto
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!--====================================
+        TESTIMONIOS
+=====================================-->
+
+<section class="features-section">
+
+<div class="container">
+
+<h2 class="section-title">
+
+Nuestros usuarios opinan
+
+</h2>
+
+<div class="testimonial-cards">
+
+<div class="testimonial-card">
+
+<h3>⭐⭐⭐⭐⭐</h3>
+
+<p>
+
+"Gracias a SaludYa nunca vuelvo a olvidar mis medicamentos."
+
+</p>
+
+<strong>
+
+María López
+
+</strong>
+
+</div>
+
+<div class="testimonial-card">
+
+<h3>⭐⭐⭐⭐⭐</h3>
+
+<p>
+
+"Ahora tomo mucha más agua y puedo ver mi progreso."
+
+</p>
+
+<strong>
+
+Carlos Gómez
+
+</strong>
+
+</div>
+
+<div class="testimonial-card">
+
+<h3>⭐⭐⭐⭐⭐</h3>
+
+<p>
+
+"El Marketplace tiene productos muy útiles para mi rutina."
+
+</p>
+
+<strong>
+
+Ana Rodríguez
+
+</strong>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!--====================================
+        LLAMADO FINAL
+=====================================-->
+
+<section class="hero-section">
+
+<div class="container">
+
+<div class="hero-content">
+
+<h2>
+
+Comienza hoy a cuidar tu salud
+
+</h2>
+
+<p>
+
+Miles de personas ya utilizan SaludYa
+para mejorar su bienestar diariamente.
+
+</p>
+
+<div class="hero-buttons">
+
+<a
+href="{% url 'registro' %}"
+class="btn-main">
+
+Crear cuenta
+
+</a>
+
+<a
+href="{% url 'marketplace' %}"
+class="btn-secondary">
+
+Explorar Marketplace
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+<!--====================================
+            FOOTER
+=====================================-->
+
+<footer class="main-footer">
+
+    <div class="container">
+
+        <h2 style="margin-bottom:20px;">
+
+            Salud<span style="color:#2ec4b6;">Ya</span>
+
+        </h2>
+
+        <p>
+
+            Tu compañero digital para construir hábitos saludables,
+            mejorar tu bienestar y llevar una vida más organizada.
+
+        </p>
+
+        <br>
+
+        <div style="display:flex;justify-content:center;gap:30px;flex-wrap:wrap;">
+
+            <a href="#inicio">Inicio</a>
+
+            <a href="#funciones">Funciones</a>
+
+            <a href="{% url 'marketplace' %}">
+
+                Marketplace
+
+            </a>
+
+            <a href="{% url 'progreso' %}">
+
+                Progreso
+
+            </a>
+
+        </div>
+
+        <br>
+
+        <p>
+
+            © 2026 SaludYa
+
+            Todos los derechos reservados.
+
+        </p>
+
+    </div>
+
+</footer>
+
+</div>
+
+<!--====================================
+            MODAL
+=====================================-->
+
+<div
+id="customModal"
+class="modal-overlay">
+
+<div class="modal-card">
+
+<button
+class="modal-close"
+onclick="cerrarModal()">
+
+✕
+
+</button>
+
+<h2 id="modalTitle">
+
+Título
+
+</h2>
+
+<p id="modalMessage">
+
+Mensaje
+
+</p>
+
+<br>
+
+<button
+class="btn-main"
+onclick="cerrarModal()">
+
+Aceptar
+
+</button>
+
+</div>
+
+</div>
+
+<!--====================================
+            JAVASCRIPT
+=====================================-->
+
+<script>
+
+function showModal(title,message){
+
+    document.getElementById("modalTitle").innerText=title;
+
+    document.getElementById("modalMessage").innerText=message;
+
+    document
+    .getElementById("customModal")
+    .classList
+    .add("visible");
+
+}
+
+function cerrarModal(){
+
+    document
+    .getElementById("customModal")
+    .classList
+    .remove("visible");
+
+}
+
+/*=========================
+        LOGIN
+==========================*/
+
+function mostrarLogin(){
+
+    document
+    .getElementById("loginPage")
+    .style
+    .display="flex";
+
+    document
+    .getElementById("appContent")
+    .classList
+    .add("hidden");
+
+}
+
+/*=========================
+        APP
+==========================*/
+
+function mostrarApp(){
+
+    document
+    .getElementById("loginPage")
+    .style
+    .display="none";
+
+    document
+    .getElementById("appContent")
+    .classList
+    .remove("hidden");
+
+    verificarSesion();
+
+}
+
+/*=========================
+    INICIAR SESION
+==========================*/
+
+function iniciarSesion(event){
+
+    event.preventDefault();
+
+    const nombre=document
+        .getElementById("loginNombre")
+        .value
+        .trim();
+
+    if(nombre===""){
+
+        showModal(
+
+            "Campo requerido",
+
+            "Ingresa tu nombre para continuar."
+
+        );
+
+        return;
+
     }
 
-    function mostrarLogin() {
-        const loginPage = document.getElementById('loginPage');
-        const appContent = document.getElementById('appContent');
-        if (loginPage) loginPage.style.display = 'flex';
-        if (appContent) appContent.classList.add('hidden');
+    localStorage.setItem(
+
+        "usuarioSaludYa",
+
+        nombre
+
+    );
+
+    mostrarApp();
+
+}
+
+/*=========================
+    VERIFICAR SESION
+==========================*/
+
+function verificarSesion(){
+
+    const usuario=
+
+        localStorage.getItem(
+
+            "usuarioSaludYa"
+
+        );
+
+    const invitado=
+
+        document.getElementById(
+
+            "nav-invitado"
+
+        );
+
+    const usuarioNav=
+
+        document.getElementById(
+
+            "nav-usuario"
+
+        );
+
+    const saludo=
+
+        document.getElementById(
+
+            "saludo-usuario"
+
+        );
+
+    if(usuario){
+
+        invitado.style.display="none";
+
+        usuarioNav.style.display="flex";
+
+        saludo.innerHTML=
+
+        "👋 Hola, <strong>"+usuario+"</strong>";
+
     }
 
-    function mostrarApp() {
-        const loginPage = document.getElementById('loginPage');
-        const appContent = document.getElementById('appContent');
-        if (loginPage) loginPage.style.display = 'none';
-        if (appContent) appContent.classList.remove('hidden');
-        verificarSesion();
+    else{
+
+        invitado.style.display="block";
+
+        usuarioNav.style.display="none";
+
     }
 
-    function iniciarSesion(event) {
-        event.preventDefault();
-        const nombre = document.getElementById('loginNombre').value.trim();
-        if (!nombre) {
-            alert('Ingresa tu nombre para continuar.');
-            return;
-        }
-        localStorage.setItem('usuarioSaludYa', nombre);
-        mostrarApp();
-    }
+}
 
-    function verificarSesion() {
-        const usuarioGuardado = localStorage.getItem('usuarioSaludYa');
-        const contenedorInvitado = document.getElementById('nav-invitado');
-        const contenedorUsuario = document.getElementById('nav-usuario');
-        const saludoText = document.getElementById('saludo-usuario');
+/*=========================
+    CERRAR SESION
+==========================*/
 
-        if (usuarioGuardado) {
-            contenedorInvitado.style.display = 'none';
-            contenedorUsuario.style.display = 'inline-block';
-            saludoText.textContent = `¡Hola, ${usuarioGuardado}! 👋`;
-        } else {
-            contenedorInvitado.style.display = 'inline-block';
-            contenedorUsuario.style.display = 'none';
-        }
-    }
+function cerrarSesion(){
 
-    function cerrarSesion() {
-        localStorage.removeItem('usuarioSaludYa');
-        alert('Has cerrado sesión. ¡Vuelve pronto a cuidar de tu salud!');
-        mostrarLogin();
-    }
+    localStorage.removeItem(
 
-    window.addEventListener('DOMContentLoaded', function() {
-        const loginForm = document.getElementById('loginForm');
-        if (loginForm) {
-            loginForm.addEventListener('submit', iniciarSesion);
-        }
+        "usuarioSaludYa"
 
-        const usuarioGuardado = localStorage.getItem('usuarioSaludYa');
-        if (usuarioGuardado) {
-            document.getElementById('loginNombre').value = usuarioGuardado;
-            mostrarApp();
-        } else {
-            mostrarLogin();
-        }
-    });
-    </script>
+    );
+
+    showModal(
+
+        "Sesión finalizada",
+
+        "Esperamos volver a verte muy pronto."
+
+    );
+
+    mostrarLogin();
+
+}
+
+/*=========================
+    CARGA
+==========================*/
+
+window.addEventListener(
+
+"DOMContentLoaded",
+
+function(){
+
+const loginForm=
+
+document.getElementById(
+
+"loginForm"
+
+);
+
+if(loginForm){
+
+loginForm.addEventListener(
+
+"submit",
+
+iniciarSesion
+
+);
+
+}
+
+const usuario=
+
+localStorage.getItem(
+
+"usuarioSaludYa"
+
+);
+
+if(usuario){
+
+document.getElementById(
+
+"loginNombre"
+
+).value=usuario;
+
+mostrarApp();
+
+}
+
+else{
+
+mostrarLogin();
+
+}
+
+});
+
+/*=========================
+    ANIMACION
+==========================*/
+
+const observer=new IntersectionObserver(
+
+entries=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+entry.target.style.opacity="1";
+
+entry.target.style.transform="translateY(0)";
+
+}
+
+});
+
+},
+
+{
+
+threshold:.15
+
+}
+
+);
+
+document.querySelectorAll(
+
+".feature-card,.overview-card,.product-card"
+
+).forEach(card=>{
+
+card.style.opacity="0";
+
+card.style.transform="translateY(40px)";
+
+card.style.transition=".7s";
+
+observer.observe(card);
+
+});
+
+</script>
 
 </body>
+
 </html>
