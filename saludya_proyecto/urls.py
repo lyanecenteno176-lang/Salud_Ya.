@@ -103,8 +103,8 @@ urlpatterns = [
     path('api/orders/', api_orders, name='api_orders'),
 
     # Marketplace - Productos
-    path('marketplace/', marketplace, name='marketplace'),
-    path('market/', marketplace, name='market'),
+    path('marketplace/', market_view, name='marketplace'),
+    path('market/', market_view, name='market'),
     path('marketplace/product/new/', product_create, name='product_create'),
 
     path('marketplace/product/<int:product_id>/', product_detail, name='product_detail'),

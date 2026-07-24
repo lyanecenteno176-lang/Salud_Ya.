@@ -136,12 +136,17 @@
 <body style="background: var(--bg-light); padding-bottom:3rem;">
 
 <script>
-const usuarioActivo = localStorage.getItem("usuarioSaludYa");
+window.addEventListener("DOMContentLoaded", function () {
+    const usuarioActivo = localStorage.getItem("usuarioSaludYa");
 
-if(!usuarioActivo){
-    alert("Acceso restringido. Inicia sesión.");
-    window.location.href="{% url 'index' %}";
-}
+    if (!usuarioActivo) {
+        console.info("Historial abierto sin sesión persistida; se cargan datos por defecto.");
+    }
+
+    if (typeof cargarDatosDinamicos === "function") {
+        cargarDatosDinamicos();
+    }
+});
 </script>
 
 <header class="main-header">
@@ -275,274 +280,112 @@ if(!usuarioActivo){
 
 </main>
 <script>
-
-document.getElementById("filtro-fecha").valueAsDate = new Date();
-
 const ejerciciosDinamicos = [
-
-    {
-        tipo:"Caminata Ligera / Pausa Activa",
-        mins:15
-    },
-
-    {
-        tipo:"Caminata Acelerada",
-        mins:30
-    },
-
-    {
-        tipo:"Estiramientos y Movilidad",
-        mins:20
-    },
-
-    {
-        tipo:"Cardio Suave de Oficina",
-        mins:25
-    },
-
-        window.onload = cargarDatosDinamicos;
-    </script>
-
-    <!-- Script de Notificaciones en Tiempo Real -->
-    <script src="{% static 'saludya_app/js/notificaciones.js' %}"></script>
-</body>
-</html>
-
-    {
-        tipo:"Entrenamiento Funcional",
-        mins:40
-    },
-
-    {
-        tipo:"Rutina de Yoga",
-        mins:35
-    }
-
+    { tipo: "Caminata Ligera / Pausa Activa", mins: 15 },
+    { tipo: "Caminata Acelerada", mins: 30 },
+    { tipo: "Estiramientos y Movilidad", mins: 20 },
+    { tipo: "Cardio Suave de Oficina", mins: 25 },
+    { tipo: "Entrenamiento Funcional", mins: 40 },
+    { tipo: "Rutina de Yoga", mins: 35 }
 ];
 
 const medicamentosDinamicos = [
-
-    {
-        nombre:"Paracetamol 500 mg",
-        dosis:"Dosis matutina tomada correctamente."
-    },
-
-    {
-        nombre:"Vitamina C + Zinc",
-        dosis:"Suplemento diario registrado."
-    },
-
-    {
-        nombre:"Ibuprofeno 400 mg",
-        dosis:"Tomado según indicación médica."
-    },
-
-    {
-        nombre:"Omeprazol 20 mg",
-        dosis:"Administrado antes del desayuno."
-    },
-
-    {
-        nombre:"Loratadina 10 mg",
-        dosis:"Registro diario completado."
-    }
-
+    { nombre: "Paracetamol 500 mg", dosis: "Dosis matutina tomada correctamente." },
+    { nombre: "Vitamina C + Zinc", dosis: "Suplemento diario registrado." },
+    { nombre: "Ibuprofeno 400 mg", dosis: "Tomado según indicación médica." },
+    { nombre: "Omeprazol 20 mg", dosis: "Administrado antes del desayuno." },
+    { nombre: "Loratadina 10 mg", dosis: "Registro diario completado." }
 ];
 
-function cargarDatosDinamicos(){
+document.getElementById("filtro-fecha").valueAsDate = new Date();
+window.addEventListener("DOMContentLoaded", cargarDatosDinamicos);
 
+function cargarDatosDinamicos() {
     let calorias = localStorage.getItem("sesion_calorias");
     let pulsaciones = localStorage.getItem("sesion_pulsaciones");
     let agua = localStorage.getItem("sesion_agua");
     let ejIndex = localStorage.getItem("sesion_ej_index");
     let medIndex = localStorage.getItem("sesion_med_index");
 
-    if(!calorias){
+    if (!calorias) {
+        calorias = Math.floor(Math.random() * 220) + 180;
+        pulsaciones = Math.floor(Math.random() * 18) + 68;
+        agua = (Math.floor(Math.random() * 5) + 4) * 250 + 500;
+        ejIndex = Math.floor(Math.random() * ejerciciosDinamicos.length);
+        medIndex = Math.floor(Math.random() * medicamentosDinamicos.length);
 
-        calorias = Math.floor(Math.random()*220)+180;
-
-        pulsaciones = Math.floor(Math.random()*18)+68;
-
-        agua = (Math.floor(Math.random()*5)+4)*250+500;
-
-        ejIndex = Math.floor(Math.random()*ejerciciosDinamicos.length);
-
-        medIndex = Math.floor(Math.random()*medicamentosDinamicos.length);
-
-        localStorage.setItem("sesion_calorias",calorias);
-
-        localStorage.setItem("sesion_pulsaciones",pulsaciones);
-
-        localStorage.setItem("sesion_agua",agua);
-
-        localStorage.setItem("sesion_ej_index",ejIndex);
-
-        localStorage.setItem("sesion_med_index",medIndex);
-
+        localStorage.setItem("sesion_calorias", calorias);
+        localStorage.setItem("sesion_pulsaciones", pulsaciones);
+        localStorage.setItem("sesion_agua", agua);
+        localStorage.setItem("sesion_ej_index", ejIndex);
+        localStorage.setItem("sesion_med_index", medIndex);
     }
 
-    document.getElementById("calorias-val").innerHTML =
-        calorias + " kcal";
+    document.getElementById("calorias-val").innerHTML = calorias + " kcal";
+    document.getElementById("pulsaciones-val").innerHTML = pulsaciones + " BPM";
+    document.getElementById("agua-val").innerHTML = Number(agua).toLocaleString() + " ml";
 
-    document.getElementById("pulsaciones-val").innerHTML =
-        pulsaciones + " BPM";
-
-    document.getElementById("agua-val").innerHTML =
-        Number(agua).toLocaleString() + " ml";
-
-    renderizarTimeline(
-        calorias,
-        agua,
-        pulsaciones,
-        ejIndex,
-        medIndex
-    );
-
+    renderizarTimeline(calorias, agua, pulsaciones, ejIndex, medIndex);
 }
 
-function renderizarTimeline(
-    calorias,
-    agua,
-    pulsaciones,
-    ejIndex,
-    medIndex
-){
-
+function renderizarTimeline(calorias, agua, pulsaciones, ejIndex, medIndex) {
     const ejercicio = ejerciciosDinamicos[ejIndex];
-
     const medicamento = medicamentosDinamicos[medIndex];
-
-    const timeline =
-        document.getElementById("timeline-container");
+    const timeline = document.getElementById("timeline-container");
 
     timeline.innerHTML = `
+        <div class="timeline-item">
+            <div class="timeline-dot" style="background:#c62828;"></div>
+            <span class="timeline-time">08:00 AM</span>
+            <div class="timeline-title">
+                ${medicamento.nombre}
+                <span class="badge badge-med">Medicación</span>
+            </div>
+            <div class="timeline-details">${medicamento.dosis}</div>
+        </div>
 
-<div class="timeline-item">
+        <div class="timeline-item">
+            <div class="timeline-dot" style="background:#2e7d32;"></div>
+            <span class="timeline-time">10:30 AM</span>
+            <div class="timeline-title">
+                ${ejercicio.tipo}
+                <span class="badge badge-ejercicio">Ejercicio</span>
+            </div>
+            <div class="timeline-details">
+                Duración: <strong>${ejercicio.mins} minutos</strong><br>
+                Pulsaciones promedio: <strong>${pulsaciones} BPM</strong><br>
+                Calorías quemadas: <strong>${calorias} kcal</strong>
+            </div>
+        </div>
 
-<div class="timeline-dot"
-style="background:#c62828;"></div>
-
-<span class="timeline-time">
-08:00 AM
-</span>
-
-<div class="timeline-title">
-
-${medicamento.nombre}
-
-<span class="badge badge-med">
-
-Medicación
-
-</span>
-
-</div>
-
-<div class="timeline-details">
-
-${medicamento.dosis}
-
-</div>
-
-</div>
-
-
-<div class="timeline-item">
-
-<div class="timeline-dot"
-style="background:#2e7d32;"></div>
-
-<span class="timeline-time">
-
-10:30 AM
-
-</span>
-
-<div class="timeline-title">
-
-${ejercicio.tipo}
-
-<span class="badge badge-ejercicio">
-
-Ejercicio
-
-</span>
-
-</div>
-
-<div class="timeline-details">
-
-Duración:
-<strong>${ejercicio.mins} minutos</strong>
-
-<br>
-
-Pulsaciones promedio:
-<strong>${pulsaciones} BPM</strong>
-
-<br>
-
-Calorías quemadas:
-<strong>${calorias} kcal</strong>
-
-</div>
-
-</div>
-
-
-<div class="timeline-item">
-
-<div class="timeline-dot"
-style="background:#00838f;"></div>
-
-<span class="timeline-time">
-
-02:15 PM
-
-</span>
-
-<div class="timeline-title">
-
-Registro de Hidratación
-
-<span class="badge badge-agua">
-
-Agua
-
-</span>
-
-</div>
-
-<div class="timeline-details">
-
-Has consumido
-
-<strong>${Number(agua).toLocaleString()} ml</strong>
-
-de agua durante el día.
-
-</div>
-
-</div>
-
-`;
-
+        <div class="timeline-item">
+            <div class="timeline-dot" style="background:#00838f;"></div>
+            <span class="timeline-time">02:15 PM</span>
+            <div class="timeline-title">
+                Registro de Hidratación
+                <span class="badge badge-agua">Agua</span>
+            </div>
+            <div class="timeline-details">
+                Has consumido <strong>${Number(agua).toLocaleString()} ml</strong> de agua durante el día.
+            </div>
+        </div>
+    `;
 }
 
-function cerrarSesion(){
-
+function cerrarSesion() {
     localStorage.removeItem("usuarioSaludYa");
-
     localStorage.removeItem("sesion_calorias");
-
     localStorage.removeItem("sesion_pulsaciones");
-
     localStorage.removeItem("sesion_agua");
-
     localStorage.removeItem("sesion_ej_index");
-
     localStorage.removeItem("sesion_med_index");
-
     alert("Has cerrado sesión.");
+    window.location.href = "{% url 'index' %}";
 }
+</script>
+
+<!-- Script de Notificaciones en Tiempo Real -->
+<script src="{% static 'saludya_app/js/notificaciones.js' %}"></script>
+</body>
+</html>
 

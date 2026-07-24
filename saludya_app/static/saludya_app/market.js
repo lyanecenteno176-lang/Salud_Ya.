@@ -206,7 +206,7 @@ const products = [
         subcategory: 'Primeros Auxilios',
         price: 25.00,
         available: true,
-        image: '/static/saludya_app/images/Curitas-Adhesivas.jpg',
+        image: '/static/saludya_app/images/Curitas Adhesivas.jpg',
         tag: '⭐ Más vendido',
         tagType: 'tag-bestseller',
     },
