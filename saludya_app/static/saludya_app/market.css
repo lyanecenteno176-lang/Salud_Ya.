@@ -1,589 +1,1431 @@
-/* Estilos generales para el Marketplace de SaludYa */
+/* =========================================================
+   MARKETPLACE SALUDYA
+   PARTE 1: VARIABLES, BASE Y ENCABEZADO
+========================================================= */
+
 :root {
-    --blue: #2E86DE;
-    --green: #27AE60;
-    --white: #FFFFFF;
-    --gray-100: #F7F9FB;
-    --gray-200: #E5E9F0;
-    --gray-400: #A3AED0;
-    --gray-700: #2F365F;
-    --shadow: 0 18px 50px rgba(46, 134, 222, 0.12);
+    --market-primary: #2ec4b6;
+    --market-primary-dark: #239f94;
+    --market-primary-light: #e9f9f7;
+    --market-primary-soft: #f4fcfb;
+
+    --market-secondary: #011627;
+    --market-secondary-soft: #123047;
+
+    --market-accent: #e71d36;
+
+    --market-white: #ffffff;
+    --market-bg: #f4faf9;
+
+    --market-text: #344054;
+    --market-text-soft: #667085;
+    --market-text-muted: #98a2b3;
+
+    --market-border: #e3ecea;
+    --market-border-strong: #ccdcd9;
+
+    --market-radius-sm: 10px;
+    --market-radius-md: 14px;
+    --market-radius-lg: 20px;
+    --market-radius-xl: 26px;
+    --market-radius-2xl: 34px;
+    --market-radius-pill: 999px;
+
+    --market-shadow-xs:
+        0 3px 12px rgba(1, 22, 39, 0.04);
+
+    --market-shadow-sm:
+        0 8px 24px rgba(1, 22, 39, 0.07);
+
+    --market-shadow-md:
+        0 18px 45px rgba(1, 22, 39, 0.11);
+
+    --market-transition:
+        180ms ease;
 }
+
+
+/* =========================================================
+   REINICIO BÁSICO
+========================================================= */
 
 * {
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: linear-gradient(180deg, #F8FCFF 0%, #F7F9FB 100%);
-    color: var(--gray-700);
+    min-height: 100vh;
+
+    font-family:
+        "Inter",
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    color: var(--market-text);
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(46, 196, 182, 0.08),
+            transparent 30%
+        ),
+        var(--market-bg) !important;
 }
+
+button,
+input {
+    font: inherit;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* =========================================================
+   CONTENEDOR PRINCIPAL
+========================================================= */
 
 .market-shell {
-    width: min(1200px, calc(100% - 2rem));
+    width: min(92%, 1280px);
+
     margin: 0 auto;
-    padding: 2rem 0 3rem;
+    padding: 38px 0 80px;
 }
+
+
+/* =========================================================
+   HERO DEL MARKETPLACE
+========================================================= */
 
 .market-hero {
-    display: grid;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+    display: grid !important;
+
+    grid-template-columns:
+        minmax(0, 0.9fr)
+        minmax(380px, 1.1fr) !important;
+
+    align-items: center;
+    gap: 46px;
+
+    margin: 0 0 30px !important;
+    padding: 42px !important;
+
+    overflow: hidden;
+
+    border: 1px solid var(--market-border) !important;
+    border-radius: var(--market-radius-2xl) !important;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(46, 196, 182, 0.2),
+            transparent 36%
+        ),
+        radial-gradient(
+            circle at bottom left,
+            rgba(46, 196, 182, 0.09),
+            transparent 38%
+        ),
+        linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #f3fcfb 100%
+        ) !important;
+
+    box-shadow: var(--market-shadow-sm) !important;
 }
 
+
+/* =========================================================
+   BLOQUE DE TÍTULO
+========================================================= */
+
 .market-title-block {
-    background: var(--white);
-    border-radius: 28px;
-    padding: 2.5rem;
-    box-shadow: var(--shadow);
+    max-width: 680px;
 }
 
 .market-label {
-    color: var(--green);
-    font-weight: 700;
-    letter-spacing: 0.15em;
+    display: inline-flex;
+    align-items: center;
+
+    margin: 0 0 14px;
+
+    font-family:
+        "Poppins",
+        "Inter",
+        sans-serif;
+
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    margin: 0 0 0.75rem;
-    display: inline-block;
+
+    color: var(--market-primary-dark) !important;
+}
+
+.market-label::before {
+    content: "";
+
+    width: 8px;
+    height: 8px;
+
+    margin-right: 9px;
+
+    border-radius: 50%;
+
+    background: var(--market-primary);
 }
 
 .market-title-block h1 {
-    margin: 0;
-    font-size: clamp(2rem, 2.8vw, 3.15rem);
-    line-height: 1.05;
-}
+    margin: 0 0 18px !important;
 
-.market-back-link {
-    display: inline-flex;
-    align-items: center;
-    margin-top: 1.25rem;
-    font-weight: 700;
-    color: var(--blue);
-    text-decoration: none;
-    border: 1px solid rgba(46, 134, 222, 0.15);
-    padding: 0.75rem 1rem;
-    border-radius: 999px;
-    transition: background 160ms ease, transform 160ms ease;
-}
+    font-family:
+        "Poppins",
+        "Inter",
+        sans-serif;
 
-.market-back-link:hover {
-    background: rgba(46, 134, 222, 0.08);
-    transform: translateY(-1px);
+    font-size: clamp(2.35rem, 4.5vw, 3.65rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+
+    color: var(--market-secondary) !important;
 }
 
 .market-description {
-    margin: 1rem 0 0;
-    max-width: 640px;
-    line-height: 1.7;
-    color: #4F5B7A;
+    max-width: 650px;
+
+    margin: 0 0 28px !important;
+
+    font-size: 1.05rem;
+    line-height: 1.75;
+
+    color: var(--market-text-soft) !important;
 }
+
+
+/* =========================================================
+   ENLACE DE REGRESO
+========================================================= */
+
+.market-back-link {
+    min-height: 48px;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 12px 22px;
+
+    border: 2px solid var(--market-primary) !important;
+    border-radius: var(--market-radius-md) !important;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+
+    color: var(--market-primary-dark) !important;
+    background: var(--market-white) !important;
+
+    transition:
+        color var(--market-transition),
+        background var(--market-transition),
+        border-color var(--market-transition),
+        transform var(--market-transition),
+        box-shadow var(--market-transition);
+}
+
+.market-back-link:hover {
+    color: var(--market-white) !important;
+    background: var(--market-primary) !important;
+    border-color: var(--market-primary) !important;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 22px rgba(46, 196, 182, 0.23);
+}
+/* =========================================================
+   MARKETPLACE SALUDYA
+   PARTE 2: BUSCADOR Y FILTROS
+========================================================= */
 
 .market-hero-actions {
     display: grid;
-    gap: 1rem;
+    gap: 24px;
+
+    margin: 0 !important;
 }
 
-/* Barra de búsqueda y filtros */
+
+/* =========================================================
+   BUSCADOR
+========================================================= */
+
 .market-search {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 0.75rem;
-}
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
 
-.market-filter-group {
-    display: grid;
-    gap: 0.75rem;
-}
-
-.market-filter-toolbar {
-    display: grid;
-    gap: 1rem;
-}
-
-.market-filter-label {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--gray-700);
+    gap: 12px;
 }
 
 .market-search input {
     width: 100%;
-    border: 1px solid var(--gray-200);
-    border-radius: 16px;
-    padding: 1rem 1.25rem;
-    font-size: 1rem;
+    min-width: 0;
+    min-height: 54px;
+
+    padding: 14px 17px;
+
+    border: 1.5px solid var(--market-border-strong) !important;
+    border-radius: var(--market-radius-md) !important;
+
+    font-size: 0.98rem;
+
+    color: var(--market-secondary) !important;
+    background: var(--market-white) !important;
+
     outline: none;
-    transition: border-color 160ms ease;
+
+    transition:
+        border-color var(--market-transition),
+        box-shadow var(--market-transition),
+        background var(--market-transition);
+}
+
+.market-search input::placeholder {
+    color: var(--market-text-muted);
+}
+
+.market-search input:hover {
+    border-color: #a9c7c2 !important;
 }
 
 .market-search input:focus {
-    border-color: var(--blue);
-    box-shadow: 0 0 0 4px rgba(46, 134, 222, 0.1);
+    border-color: var(--market-primary) !important;
+
+    box-shadow:
+        0 0 0 4px rgba(46, 196, 182, 0.14) !important;
 }
 
 .market-search button {
-    border: none;
-    border-radius: 16px;
-    background: var(--blue);
-    color: var(--white);
-    padding: 1rem 1.2rem;
+    min-width: 112px;
+    min-height: 54px;
+
+    padding: 13px 24px;
+
+    border: 2px solid var(--market-primary) !important;
+    border-radius: var(--market-radius-md) !important;
+
+    font-size: 0.94rem;
     font-weight: 700;
+
+    color: var(--market-white) !important;
+    background: var(--market-primary) !important;
+
     cursor: pointer;
-    transition: transform 150ms ease, box-shadow 150ms ease;
+
+    transition:
+        background var(--market-transition),
+        border-color var(--market-transition),
+        transform var(--market-transition),
+        box-shadow var(--market-transition);
 }
 
 .market-search button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 10px 28px rgba(46, 134, 222, 0.18);
+    background: var(--market-primary-dark) !important;
+    border-color: var(--market-primary-dark) !important;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 22px rgba(46, 196, 182, 0.22);
+}
+
+.market-search button:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   BARRA DE FILTROS
+========================================================= */
+
+.market-filter-toolbar {
+    display: grid;
+    gap: 22px;
+}
+
+.market-filter-group {
+    display: grid;
+    gap: 11px;
+}
+
+.market-filter-label {
+    font-family:
+        "Poppins",
+        "Inter",
+        sans-serif;
+
+    font-size: 0.92rem;
+    font-weight: 700;
+
+    color: var(--market-secondary) !important;
 }
 
 .market-filters {
-    display: flex;
+    display: flex !important;
     flex-wrap: wrap;
-    gap: 0.75rem;
+
+    gap: 10px;
 }
 
+
+/* =========================================================
+   BOTONES DE FILTRO
+========================================================= */
+
 .filter-pill {
-    border: 1px solid rgba(46, 134, 222, 0.08);
-    background: var(--white);
-    color: var(--gray-700);
-    border-radius: 999px;
-    padding: 0.95rem 1.25rem;
+    min-height: 42px;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 9px 18px;
+
+    border: 1px solid var(--market-border) !important;
+    border-radius: var(--market-radius-pill) !important;
+
+    font-size: 0.88rem;
+    font-weight: 650;
+
+    color: var(--market-text-soft) !important;
+    background: var(--market-white) !important;
+
     cursor: pointer;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-    transition: background 160ms ease, border-color 160ms ease, transform 160ms ease, color 160ms ease, box-shadow 160ms ease;
+
+    box-shadow: var(--market-shadow-xs);
+
+    transition:
+        color var(--market-transition),
+        background var(--market-transition),
+        border-color var(--market-transition),
+        transform var(--market-transition),
+        box-shadow var(--market-transition);
 }
 
 .filter-pill:hover {
-    background: rgba(46, 134, 222, 0.1);
+    color: var(--market-primary-dark) !important;
+    background: var(--market-primary-light) !important;
+    border-color: var(--market-primary) !important;
+
     transform: translateY(-1px);
 }
 
 .filter-pill.active {
-    background: var(--blue);
-    border-color: var(--blue);
-    color: var(--white);
-    box-shadow: 0 12px 28px rgba(46, 134, 222, 0.18);
+    color: var(--market-white) !important;
+    background: var(--market-primary) !important;
+    border-color: var(--market-primary) !important;
+
+    box-shadow:
+        0 9px 20px rgba(46, 196, 182, 0.21) !important;
 }
 
+.filter-pill.active:hover {
+    color: var(--market-white) !important;
+    background: var(--market-primary-dark) !important;
+    border-color: var(--market-primary-dark) !important;
+}
+
+
+/* =========================================================
+   BARRA DE RESULTADOS
+========================================================= */
+
 .market-status-bar {
+    min-height: 58px;
+
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 1rem 1.25rem;
-    background: var(--white);
-    border-radius: 20px;
-    box-shadow: var(--shadow);
-    margin-bottom: 1.5rem;
+    align-items: center;
+
+    gap: 16px;
+
+    margin: 0 0 26px !important;
+    padding: 15px 20px !important;
+
+    border: 1px solid var(--market-border) !important;
+    border-radius: var(--market-radius-lg) !important;
+
+    background: var(--market-white) !important;
+
+    box-shadow: var(--market-shadow-xs) !important;
 }
 
 .market-status-bar span {
+    font-size: 0.93rem;
     font-weight: 600;
+
+    color: var(--market-text-soft) !important;
 }
+
+
+/* =========================================================
+   MENSAJES VACÍOS
+========================================================= */
+
+.market-empty {
+    grid-column: 1 / -1;
+
+    padding: 42px 24px;
+
+    border: 1px dashed var(--market-border-strong);
+    border-radius: var(--market-radius-xl);
+
+    text-align: center;
+
+    color: var(--market-text-soft);
+    background: var(--market-white);
+}
+
+.market-empty h2 {
+    margin: 0 0 10px;
+
+    font-family:
+        "Poppins",
+        "Inter",
+        sans-serif;
+
+    color: var(--market-secondary);
+}
+
+.market-empty p {
+    margin: 0;
+
+    line-height: 1.65;
+}
+/* =========================================================
+   MARKETPLACE SALUDYA
+   PARTE 3: CUADRÍCULA, TARJETAS E IMÁGENES
+========================================================= */
 
 .market-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.5rem;
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr)) !important;
+
+    gap: 26px !important;
 }
 
+
+/* =========================================================
+   TARJETA PRINCIPAL
+========================================================= */
+
 .product-card {
-    display: flex;
-    flex-direction: column;
-    border-radius: 28px;
-    background: var(--white);
-    overflow: hidden;
+    position: relative;
+
+    min-width: 0;
     min-height: 100%;
-    box-shadow: var(--shadow);
+
+    display: flex !important;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    border: 1px solid var(--market-border) !important;
+    border-radius: var(--market-radius-xl) !important;
+
+    background: var(--market-white) !important;
+
+    box-shadow: var(--market-shadow-sm) !important;
+
     transform: translateY(0);
-    transition: transform 180ms ease, box-shadow 180ms ease;
-    animation: fadeInUp 0.45s ease both;
+
+    transition:
+        transform 240ms ease,
+        box-shadow 240ms ease,
+        border-color 240ms ease;
+
+    animation:
+        marketFadeUp 0.45s ease both;
 }
 
 .product-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 26px 56px rgba(46, 134, 222, 0.16);
-}
+    border-color: rgba(46, 196, 182, 0.45) !important;
 
-.product-card-top {
-    position: relative;
-    min-height: 220px;
-    overflow: hidden;
-}
+    transform: translateY(-7px);
 
-.product-card-top::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(15, 76, 129, 0.12));
-    pointer-events: none;
-}
-
-.product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 240ms ease;
-}
-
-.product-card:hover .product-image {
-    transform: scale(1.03);
-}
-
-.category-badge {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    background: rgba(255, 255, 255, 0.92);
-    color: var(--blue);
-    padding: 0.55rem 0.9rem;
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 12px 28px rgba(46, 134, 222, 0.09);
-}
-
-.product-body {
-    padding: 1.75rem;
-    gap: 0.85rem;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-.product-name {
-    margin: 0 0 0.75rem;
-    font-size: 1.2rem;
-    letter-spacing: -0.03em;
-}
-
-.product-description {
-    margin: 0;
-    line-height: 1.75;
-    color: #4F5B7A;
-    flex: 1;
-}
-
-.product-category {
-    margin: 0.35rem 0 0;
-    font-size: 0.92rem;
-    color: #6F7A91;
-    font-weight: 700;
-}
-
-.product-footer {
-    padding: 1.5rem;
-    border-top: 1px solid #EFF3FB;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.product-price {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: var(--blue);
-}
-
-.product-stock {
-    margin: 0.4rem 0 0;
-    color: #60738D;
-    font-size: 0.95rem;
-}
-
-.product-actions {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-}
-
-.btn {
-    border: none;
-    border-radius: 16px;
-    padding: 0.95rem 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 160ms ease, background 160ms ease, opacity 160ms ease, box-shadow 160ms ease;
-}
-
-.btn-detail {
-    background: #F7F9FB;
-    color: var(--gray-700);
-}
-
-.btn-add {
-    background: var(--green);
-    color: var(--white);
-    box-shadow: 0 12px 24px rgba(39, 174, 96, 0.2);
-}
-
-.btn:hover:not(:disabled) {
-    transform: translateY(-1px);
-}
-
-.btn-detail:hover {
-    background: #EFF3FB;
-}
-
-.btn-add:hover:not(:disabled) {
-    background: #209153;
-}
-
-.product-card.unavailable .product-badge,
-.product-card.unavailable .btn-add {
-    background: #F2F4F7;
-    color: #8A97B1;
-}
-
-.product-card.unavailable .product-stock {
-    color: #D64545;
-}
-    padding: 1.5rem;
-    gap: 0.75rem;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-.product-name {
-    margin: 0 0 0.7rem;
-    font-size: 1.15rem;
-    letter-spacing: -0.02em;
-}
-
-.product-category {
-    margin: 0.4rem 0 0;
-    font-size: 0.9rem;
-    color: var(--gray-400);
-    font-weight: 700;
-}
-
-.product-tag {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    padding: 0.55rem 0.8rem;
-    border-radius: 999px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: #fff;
-    background: rgba(46, 134, 222, 0.9);
-    box-shadow: 0 10px 20px rgba(46, 134, 222, 0.16);
-}
-
-.product-tag.tag-bestseller {
-    background: #f39c12;
-}
-
-.product-tag.tag-sale {
-    background: #e84118;
-}
-
-.product-tag.tag-new {
-    background: #22a6b3;
-}
-
-.product-tag.tag-recommended {
-    background: #27ae60;
-}
-
-.product-tag.tag-fitness {
-    background: #3c40c6;
-}
-
-.product-tag.tag-organic {
-    background: #2ecc71;
-}
-
-.product-tag.tag-healthy {
-    background: #16a085;
-}
-
-.nutrition-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.65rem;
-    margin-top: 0.9rem;
-}
-
-.nutrition-item {
-    background: #F5FAF8;
-    color: #2D6A4F;
-    font-size: 0.8rem;
-    font-weight: 700;
-    padding: 0.45rem 0.75rem;
-    border-radius: 999px;
-}
-
-.product-flags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1rem;
-}
-
-.product-flag {
-    background: #E8F8F5;
-    color: #145A32;
-    padding: 0.45rem 0.8rem;
-    font-size: 0.78rem;
-    border-radius: 999px;
-}
-
-.product-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    border-radius: 28px;
-    background: var(--white);
-    overflow: hidden;
-    min-height: 100%;
-    box-shadow: var(--shadow);
-    transform: translateY(0);
-    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
-    animation: fadeInUp 0.45s ease both;
+    box-shadow: var(--market-shadow-md) !important;
 }
 
 .product-card.added {
-    border-color: rgba(39, 174, 96, 0.45);
+    border-color: var(--market-primary) !important;
+
+    box-shadow:
+        0 0 0 3px rgba(46, 196, 182, 0.12),
+        var(--market-shadow-sm) !important;
 }
 
-.product-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 28px 64px rgba(46, 134, 222, 0.18);
-}
+
+/* =========================================================
+   ZONA DE IMAGEN
+========================================================= */
 
 .product-card-top {
     position: relative;
-    min-height: 220px;
+
+    width: 100%;
+    height: 225px;
+    min-height: 225px;
+
     overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--market-primary-light),
+            #ffffff
+        ) !important;
+}
+
+.product-card-top::after {
+    content: "";
+
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            transparent 48%,
+            rgba(1, 22, 39, 0.11)
+        );
 }
 
 .product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    display: block;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    object-fit: cover !important;
+    object-position: center;
+
+    transition:
+        transform 400ms ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.045);
+}
+
+
+/* =========================================================
+   ETIQUETA DE CATEGORÍA
+========================================================= */
+
+.category-badge {
+    position: absolute;
+    z-index: 3;
+
+    top: 14px;
+    left: 14px;
+
+    max-width: calc(100% - 110px);
+
+    padding: 7px 11px;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: var(--market-radius-pill);
+
+    font-size: 0.72rem;
+    font-weight: 750;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: var(--market-primary-dark) !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+
+    backdrop-filter: blur(9px);
+
+    box-shadow:
+        0 6px 16px rgba(1, 22, 39, 0.09);
+}
+
+
+/* =========================================================
+   ETIQUETAS DESTACADAS
+========================================================= */
+
+.product-tag {
+    position: absolute;
+    z-index: 3;
+
+    top: 14px;
+    right: 14px;
+
+    max-width: 112px;
+
+    padding: 7px 10px;
+
+    overflow: hidden;
+
+    border-radius: var(--market-radius-pill);
+
+    font-size: 0.69rem;
+    font-weight: 750;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: var(--market-white) !important;
+    background: var(--market-secondary) !important;
+
+    box-shadow:
+        0 6px 16px rgba(1, 22, 39, 0.13);
+}
+
+.product-tag:empty {
+    display: none;
+}
+
+.product-tag.tag-bestseller {
+    background: #d97706 !important;
+}
+
+.product-tag.tag-sale {
+    background: var(--market-accent) !important;
+}
+
+.product-tag.tag-new {
+    background: var(--market-primary) !important;
+}
+
+.product-tag.tag-recommended {
+    background: #2f8a57 !important;
+}
+
+.product-tag.tag-fitness {
+    background: #5755c9 !important;
+}
+
+.product-tag.tag-organic {
+    background: #348a46 !important;
+}
+
+.product-tag.tag-healthy {
+    background: #21876d !important;
+}
+
+
+/* =========================================================
+   PRODUCTOS NO DISPONIBLES
+========================================================= */
+
+.product-card.unavailable {
+    opacity: 0.88;
+}
+
+.product-card.unavailable .product-image {
+    filter: grayscale(25%);
+}
+
+.product-card.unavailable .category-badge {
+    color: #7b8794 !important;
+    background: rgba(241, 244, 246, 0.95) !important;
+}
+/* =========================================================
+   MARKETPLACE SALUDYA
+   PARTE 4: CONTENIDO, METADATOS, PRECIO Y BOTONES
+========================================================= */
+
+.product-body {
+    flex: 1;
+
+    display: flex !important;
+    flex-direction: column;
+
+    padding: 22px !important;
+}
+
+
+/* =========================================================
+   NOMBRE Y DESCRIPCIÓN
+========================================================= */
+
+.product-name {
+    margin: 0 0 9px !important;
+
+    font-family:
+        "Poppins",
+        "Inter",
+        sans-serif;
+
+    font-size: 1.14rem;
+    font-weight: 750;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+
+    color: var(--market-secondary) !important;
 }
 
 .product-description {
-    margin: 0;
-    line-height: 1.7;
-    color: #55607C;
     flex: 1;
+
+    margin: 0 0 13px !important;
+
+    font-size: 0.92rem;
+    line-height: 1.65;
+
+    color: var(--market-text-soft) !important;
 }
 
-.product-footer {
-    padding: 1.5rem;
-    border-top: 1px solid #EFF3FB;
+.product-category {
+    margin: 0 0 13px !important;
+
+    font-size: 0.73rem;
+    font-weight: 750;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+
+    color: var(--market-primary-dark) !important;
+}
+
+
+/* =========================================================
+   METADATOS
+========================================================= */
+
+.product-meta {
+    display: grid;
+    gap: 9px;
+}
+
+.nutrition-list,
+.product-flags {
     display: flex;
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin: 8px 0 0 !important;
+}
+
+.nutrition-item,
+.product-flag {
+    display: inline-flex;
     align-items: center;
+
+    padding: 5px 9px;
+
+    border: 1px solid rgba(46, 196, 182, 0.13);
+    border-radius: var(--market-radius-pill);
+
+    font-size: 0.7rem;
+    font-weight: 650;
+
+    color: var(--market-primary-dark) !important;
+    background: var(--market-primary-light) !important;
+}
+
+
+/* =========================================================
+   PIE DE TARJETA
+========================================================= */
+
+.product-footer {
+    display: flex !important;
     justify-content: space-between;
-    gap: 1rem;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 17px 22px 22px !important;
+
+    border-top: 1px solid var(--market-border) !important;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #fcfefe
+        );
+}
+
+.product-footer > div:first-child {
+    min-width: 88px;
 }
 
 .product-price {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--blue);
+    margin: 0 !important;
+
+    font-family:
+        "Poppins",
+        "Inter",
+        sans-serif;
+
+    font-size: 1.22rem;
+    font-weight: 800;
+    line-height: 1.2;
+
+    color: var(--market-primary-dark) !important;
 }
 
 .product-stock {
-    margin: 0.35rem 0 0;
-    color: #60738D;
-    font-size: 0.95rem;
-}
+    margin: 4px 0 0 !important;
 
-.product-actions {
-    display: grid;
-    gap: 0.75rem;
-}
+    font-size: 0.78rem;
+    line-height: 1.3;
 
-.btn {
-    border: none;
-    border-radius: 16px;
-    padding: 0.95rem 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 160ms ease, background 160ms ease, opacity 160ms ease;
-}
-
-.btn-detail {
-    background: #F7F9FB;
-    color: var(--gray-700);
-}
-
-.btn-add {
-    background: var(--green);
-    color: var(--white);
-}
-
-.btn:hover:not(:disabled) {
-    transform: translateY(-1px);
-}
-
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.product-card.unavailable .product-badge,
-.product-card.unavailable .btn-add {
-    background: #F2F4F7;
-    color: #8A97B1;
+    color: var(--market-text-muted) !important;
 }
 
 .product-card.unavailable .product-stock {
-    color: #D64545;
+    color: var(--market-accent) !important;
 }
 
-@keyframes fadeInUp {
+
+/* =========================================================
+   ACCIONES
+========================================================= */
+
+.product-actions {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+
+    gap: 7px;
+}
+
+
+/* =========================================================
+   BOTONES GENERALES
+========================================================= */
+
+.product-actions .btn {
+    min-height: 40px;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 9px 12px !important;
+
+    border: 1px solid transparent !important;
+    border-radius: var(--market-radius-md) !important;
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.2;
+
+    cursor: pointer;
+
+    transition:
+        color var(--market-transition),
+        background var(--market-transition),
+        border-color var(--market-transition),
+        transform var(--market-transition),
+        box-shadow var(--market-transition);
+}
+
+
+/* =========================================================
+   BOTÓN VER DETALLES
+========================================================= */
+
+.product-actions .btn-detail {
+    color: var(--market-primary-dark) !important;
+    border-color: var(--market-primary) !important;
+    background: var(--market-white) !important;
+}
+
+.product-actions .btn-detail:hover {
+    color: var(--market-white) !important;
+    background: var(--market-primary) !important;
+    border-color: var(--market-primary) !important;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   BOTÓN AGREGAR
+========================================================= */
+
+.product-actions .btn-add {
+    color: var(--market-white) !important;
+    border-color: var(--market-secondary) !important;
+    background: var(--market-secondary) !important;
+}
+
+.product-actions .btn-add:hover:not(:disabled) {
+    background: var(--market-secondary-soft) !important;
+    border-color: var(--market-secondary-soft) !important;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 17px rgba(1, 22, 39, 0.17);
+}
+
+.product-actions .btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   BOTONES DESACTIVADOS
+========================================================= */
+
+.product-actions .btn:disabled {
+    color: #89949f !important;
+    border-color: #e8edef !important;
+    background: #edf1f2 !important;
+
+    opacity: 1;
+
+    cursor: not-allowed;
+
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.product-card.unavailable .btn-add {
+    color: #89949f !important;
+    border-color: #e8edef !important;
+    background: #edf1f2 !important;
+}
+
+
+/* =========================================================
+   ACCESIBILIDAD
+========================================================= */
+
+.market-back-link:focus-visible,
+.market-search input:focus-visible,
+.market-search button:focus-visible,
+.filter-pill:focus-visible,
+.product-actions .btn:focus-visible {
+    outline: 3px solid rgba(46, 196, 182, 0.35);
+    outline-offset: 3px;
+}
+/* =========================================================
+   MARKETPLACE SALUDYA
+   PARTE 5: ANIMACIÓN Y RESPONSIVE
+========================================================= */
+
+@keyframes marketFadeUp {
     from {
         opacity: 0;
-        transform: translateY(24px);
+        transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-@media (max-width: 1024px) {
+
+/* =========================================================
+   PANTALLAS MEDIANAS
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .market-hero {
+        grid-template-columns:
+            minmax(0, 0.85fr)
+            minmax(340px, 1.15fr) !important;
+
+        gap: 34px;
+
+        padding: 36px !important;
+    }
+
     .market-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .product-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .product-actions {
+        width: 100%;
+        justify-content: flex-start;
     }
 }
 
-@media (max-width: 720px) {
+
+/* =========================================================
+   TABLETAS
+========================================================= */
+
+@media (max-width: 900px) {
+
     .market-shell {
-        padding: 1.2rem 0 2rem;
+        width: min(94%, 760px);
+        padding-top: 26px;
     }
 
     .market-hero {
-        gap: 1rem;
+        grid-template-columns: 1fr !important;
+
+        gap: 30px;
+
+        padding: 34px !important;
     }
 
-    .market-search {
-        grid-template-columns: 1fr;
+    .market-title-block {
+        max-width: 100%;
     }
 
-    .market-status-bar {
-        flex-direction: column;
-        align-items: flex-start;
+    .market-title-block h1 {
+        font-size: clamp(2.25rem, 8vw, 3.2rem);
     }
 
-    .market-grid {
-        grid-template-columns: 1fr;
+    .market-description {
+        max-width: 100%;
     }
 
     .market-hero-actions {
-        gap: 0.75rem;
+        padding-top: 4px;
+    }
+}
+
+
+/* =========================================================
+   MÓVILES
+========================================================= */
+
+@media (max-width: 680px) {
+
+    .market-shell {
+        width: min(92%, 100%);
+
+        padding:
+            20px
+            0
+            50px;
+    }
+
+    .market-hero {
+        gap: 26px;
+
+        margin-bottom: 22px !important;
+        padding: 27px 20px !important;
+
+        border-radius: 24px !important;
+    }
+
+    .market-label {
+        font-size: 0.7rem;
+    }
+
+    .market-title-block h1 {
+        margin-bottom: 14px !important;
+
+        font-size: 2.15rem;
+        letter-spacing: -0.035em;
+    }
+
+    .market-description {
+        margin-bottom: 22px !important;
+
+        font-size: 0.96rem;
+        line-height: 1.65;
+    }
+
+    .market-back-link {
+        width: 100%;
+
+        min-height: 48px;
+    }
+
+    .market-search {
+        grid-template-columns: 1fr !important;
+    }
+
+    .market-search input,
+    .market-search button {
+        width: 100%;
+    }
+
+    .market-search button {
+        min-height: 50px;
+    }
+
+    .market-filter-toolbar {
+        gap: 19px;
+    }
+
+    .market-filters {
+        gap: 8px;
+    }
+
+    .filter-pill {
+        min-height: 40px;
+
+        padding: 8px 14px;
+
+        font-size: 0.82rem;
+    }
+
+    .market-status-bar {
+        min-height: auto;
+
+        align-items: flex-start;
+        flex-direction: column;
+
+        margin-bottom: 20px !important;
+        padding: 14px 16px !important;
+
+        border-radius: 16px !important;
+    }
+
+    .market-grid {
+        grid-template-columns: 1fr !important;
+
+        gap: 20px !important;
+    }
+
+    .product-card-top {
+        height: 215px;
+        min-height: 215px;
+    }
+
+    .product-body {
+        padding: 20px !important;
+    }
+
+    .product-footer {
+        align-items: stretch;
+
+        padding:
+            16px
+            20px
+            20px !important;
+    }
+
+    .product-actions {
+        display: grid !important;
+        grid-template-columns: 1fr;
+
+        width: 100%;
+    }
+
+    .product-actions .btn {
+        width: 100%;
+        min-height: 44px;
+    }
+}
+
+
+/* =========================================================
+   MÓVILES PEQUEÑOS
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .market-hero {
+        padding:
+            24px
+            17px !important;
+    }
+
+    .market-title-block h1 {
+        font-size: 1.88rem;
+    }
+
+    .market-description {
+        font-size: 0.91rem;
+    }
+
+    .filter-pill {
+        flex: 1;
+
+        min-width: calc(50% - 6px);
+    }
+
+    .category-badge {
+        max-width: 58%;
+    }
+
+    .product-tag {
+        max-width: 34%;
+    }
+}
+
+
+/* =========================================================
+   REDUCCIÓN DE MOVIMIENTO
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    .product-card {
+        animation: none;
+    }
+
+    .product-card,
+    .product-image,
+    .market-back-link,
+    .market-search button,
+    .filter-pill,
+    .product-actions .btn {
+        transition: none;
+    }
+}
+
+/* =========================================================
+   AJUSTE COMPACTO DEL ENCABEZADO DEL MARKETPLACE
+========================================================= */
+
+.market-shell {
+    width: min(94%, 1280px);
+    padding-top: 32px;
+}
+
+.market-hero {
+    grid-template-columns:
+        minmax(320px, 0.75fr)
+        minmax(520px, 1.25fr) !important;
+
+    align-items: start;
+
+    gap: 42px;
+
+    padding: 36px !important;
+}
+
+/* Columna izquierda */
+
+.market-title-block {
+    padding-top: 12px;
+}
+
+.market-title-block h1 {
+    max-width: 520px;
+
+    font-size: clamp(2.7rem, 4vw, 4.5rem);
+    line-height: 1.03;
+}
+
+.market-description {
+    max-width: 590px;
+
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+.market-back-link {
+    min-height: 46px;
+
+    padding: 10px 20px;
+}
+
+/* Columna derecha */
+
+.market-hero-actions {
+    gap: 18px;
+}
+
+.market-search {
+    align-items: stretch;
+}
+
+.market-search input {
+    min-height: 50px;
+
+    padding: 12px 16px;
+}
+
+.market-search button {
+    min-height: 50px;
+
+    padding: 11px 21px;
+}
+
+.market-filter-toolbar {
+    gap: 17px;
+}
+
+.market-filter-group {
+    gap: 9px;
+}
+
+.market-filter-label {
+    font-size: 0.9rem;
+}
+
+.market-filters {
+    gap: 8px;
+}
+
+.filter-pill {
+    min-height: 38px;
+
+    padding: 7px 14px;
+
+    font-size: 0.8rem;
+
+    box-shadow:
+        0 3px 10px rgba(1, 22, 39, 0.04);
+}
+
+/* Mantener el diseño adaptable */
+
+@media (max-width: 1000px) {
+
+    .market-hero {
+        grid-template-columns: 1fr !important;
+    }
+
+    .market-title-block h1 {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 680px) {
+
+    .market-hero {
+        padding: 26px 20px !important;
+    }
+
+    .market-title-block {
+        padding-top: 0;
+    }
+
+    .market-title-block h1 {
+        font-size: 2.2rem;
     }
 }
