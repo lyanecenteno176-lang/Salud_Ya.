@@ -18,12 +18,14 @@ from django.contrib import admin
 from django.urls import path
 from saludya_app.views import (
     index,
+    logout_view,
     registro,
     login_view,
     historial,
     config_agua,
     config_ejercicios,
     config_medicinas,
+    mis_habitos,
     perfil,
     progreso,
     gamification_dashboard,
@@ -47,7 +49,6 @@ from saludya_app.views import (
     habit_edit,
     habit_delete,
     habit_entry_create,
-    habit_entry_list,
     export_progress_pdf,
     redeem_reward,
     api_gamification,
@@ -65,6 +66,7 @@ urlpatterns = [
     path('', index, name='index'),
     path('index.html', index, name='index_html'),
     path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
     path('registro.html', registro, name='registro'),
 
     
@@ -75,7 +77,8 @@ urlpatterns = [
     path('config-agua.html', config_agua, name='config_agua'),
     path('config-ejercicios.html', config_ejercicios, name='config_ejercicios'),
     path('config-medicinas.html', config_medicinas, name='config_medicinas'),
-    
+    path('mis-habitos/', mis_habitos, name='mis_habitos'),
+
     # Perfil y progreso
     path('perfil.html', perfil, name='perfil'),
     path('progreso/', progreso, name='progreso'),
@@ -88,7 +91,7 @@ urlpatterns = [
     
     # APIs de hábitos
     path('api/habit-entry/create/', habit_entry_create, name='habit_entry_create'),
-    path('api/habit-entry/list/', habit_entry_list, name='habit_entry_list'),
+    #path('api/habit-entry/list/', habit_entry_list, name='habit_entry_list'),
     
     # APIs de gamificación
     path('api/gamification/', api_gamification, name='api_gamification'),
@@ -105,8 +108,30 @@ urlpatterns = [
     # Marketplace - Productos
     path('marketplace/', market_view, name='marketplace'),
     path('market/', market_view, name='market'),
-    path('marketplace/product/new/', product_create, name='product_create'),
 
+    path(
+        'marketplace/product/new/',
+        product_create,
+        name='product_create'
+    ),
+
+path(
+    'marketplace/product/<int:product_id>/',
+    product_detail,
+    name='product_detail'
+),
+
+path(
+    'marketplace/product/<int:product_id>/edit/',
+    product_edit,
+    name='product_edit'
+),
+
+path(
+    'marketplace/product/<int:product_id>/delete/',
+    product_delete,
+    name='product_delete'
+),
     path('marketplace/product/<int:product_id>/', product_detail, name='product_detail'),
     path('marketplace/product/new/', product_create, name='product_create'),
     path('marketplace/product/<int:product_id>/edit/', product_edit, name='product_edit'),

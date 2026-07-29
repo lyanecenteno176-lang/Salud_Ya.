@@ -151,7 +151,7 @@ const products = [
         subcategory: 'Analgésicos',
         price: 65.00,
         available: true,
-        image: '/static/saludya_app/images/Ibuprofeno-400 mg.jpg',
+        image: '/static/saludya_app/images/Ibuprofeno-400-mg.jpg',
         tag: '💪 Fitness',
         tagType: 'tag-fitness',
     },

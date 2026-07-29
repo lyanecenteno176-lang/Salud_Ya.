@@ -1,0 +1,182 @@
+[
+{
+  "model": "saludya_app.marketplacecategory",
+  "pk": 1,
+  "fields": {
+    "name": "Alimentos Saludables",
+    "slug": "alimentos-saludables",
+    "description": "Desayunos, snacks y bebidas saludables para tu día.",
+    "active": true
+  }
+},
+{
+  "model": "saludya_app.marketplacecategory",
+  "pk": 2,
+  "fields": {
+    "name": "Medicamentos",
+    "slug": "medicamentos",
+    "description": "Medicaciones farmacéuticas y orgánicas para el cuidado de la salud.",
+    "active": true
+  }
+},
+{
+  "model": "saludya_app.marketplacecategory",
+  "pk": 3,
+  "fields": {
+    "name": "Ejercicio y Bienestar",
+    "slug": "ejercicio-bienestar",
+    "description": "Yoga, gimnasios, spas de masajes y terapias psicológicas.",
+    "active": true
+  }
+},
+{
+  "model": "saludya_app.product",
+  "pk": 1,
+  "fields": {
+    "category": 1,
+    "name": "Tazón energético de avena integral",
+    "description": "Desayuno saludable con avena, frutos rojos y semillas.",
+    "price": "120.00",
+    "image_url": "https://via.placeholder.com/400x300?text=Avena+Saludable",
+    "stock": 50,
+    "featured": true,
+    "popularity": 0,
+    "created_at": "2026-07-23T15:43:09.503Z"
+  }
+},
+{
+  "model": "saludya_app.product",
+  "pk": 2,
+  "fields": {
+    "category": 1,
+    "name": "Smoothie verde detox",
+    "description": "Bebida natural de espinaca, manzana, plátano y jengibre.",
+    "price": "85.00",
+    "image_url": "https://via.placeholder.com/400x300?text=Smoothie+Verde",
+    "stock": 40,
+    "featured": true,
+    "popularity": 0,
+    "created_at": "2026-07-23T15:43:09.515Z"
+  }
+},
+{
+  "model": "saludya_app.product",
+  "pk": 3,
+  "fields": {
+    "category": 1,
+    "name": "Barritas de granola caseras",
+    "description": "Snack saludable para tu break con nueces y miel natural.",
+    "price": "65.00",
+    "image_url": "https://via.placeholder.com/400x300?text=Granola",
+    "stock": 80,
+    "featured": false,
+    "popularity": 0,
+    "created_at": "2026-07-23T15:43:09.525Z"
+  }
+},
+{
+  "model": "saludya_app.product",
+  "pk": 4,
+  "fields": {
+    "category": 2,
+    "name": "Pack de suplementos orgánicos",
+    "description": "Vitaminas y minerales 100% orgánicos para bienestar diario.",
+    "price": "220.00",
+    "image_url": "https://via.placeholder.com/400x300?text=Suplementos",
+    "stock": 25,
+    "featured": false,
+    "popularity": 0,
+    "created_at": "2026-07-23T15:43:09.534Z"
+  }
+},
+{
+  "model": "saludya_app.product",
+  "pk": 5,
+  "fields": {
+    "category": 2,
+    "name": "Jarabe natural para la tos",
+    "description": "Cuidado orgánico con miel, limón y hierbas medicinales.",
+    "price": "95.00",
+    "image_url": "https://via.placeholder.com/400x300?text=Jarabe+Natural",
+    "stock": 60,
+    "featured": false,
+    "popularity": 0,
+    "created_at": "2026-07-23T15:43:09.547Z"
+  }
+},
+{
+  "model": "saludya_app.product",
+  "pk": 6,
+  "fields": {
+    "category": 2,
+    "name": "Botiquín básico farmacéutico",
+    "description": "Medicamentos esenciales para primeros auxilios en casa.",
+    "price": "180.00",
+    "image_url": "https://via.placeholder.com/400x300?text=Botiquín",
+    "stock": 35,
+    "featured": false,
+    "popularity": 0,
+    "created_at": "2026-07-23T15:43:09.557Z"
+  }
+},
+{
+  "model": "saludya_app.product",
+  "pk": 7,
+  "fields": {
+    "category": 3,
+    "name": "Clases de yoga online",
+    "description": "Suscripción a clases de yoga en vivo para flexibilidad y calma.",
+    "price": "250.00",
+    "image_url": "https://via.placeholder.com/400x300?text=Yoga+Online",
+    "stock": 100,
+    "featured": true,
+    "popularity": 0,
+    "created_at": "2026-07-23T15:43:09.568Z"
+  }
+},
+{
+  "model": "saludya_app.product",
+  "pk": 8,
+  "fields": {
+    "category": 3,
+    "name": "Membresía de gimnasio mensual",
+    "description": "Acceso ilimitado a gimnasio y áreas de entrenamiento funcional.",
+    "price": "450.00",
+    "image_url": "https://via.placeholder.com/400x300?text=Gimnasio",
+    "stock": 100,
+    "featured": false,
+    "popularity": 0,
+    "created_at": "2026-07-23T15:43:09.579Z"
+  }
+},
+{
+  "model": "saludya_app.product",
+  "pk": 9,
+  "fields": {
+    "category": 3,
+    "name": "Sesión de spa y masaje relajante",
+    "description": "Relajación profunda para cuerpo y mente en spa urbano.",
+    "price": "380.00",
+    "image_url": "https://via.placeholder.com/400x300?text=Spa",
+    "stock": 20,
+    "featured": false,
+    "popularity": 0,
+    "created_at": "2026-07-23T15:43:09.590Z"
+  }
+},
+{
+  "model": "saludya_app.product",
+  "pk": 10,
+  "fields": {
+    "category": 3,
+    "name": "Terapia psicológica inicial",
+    "description": "Consultorio con enfoque en bienestar emocional y apoyo psicológico.",
+    "price": "320.00",
+    "image_url": "https://via.placeholder.com/400x300?text=Terapia+Psicológica",
+    "stock": 15,
+    "featured": false,
+    "popularity": 0,
+    "created_at": "2026-07-23T15:43:09.599Z"
+  }
+}
+]

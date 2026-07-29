@@ -1,0 +1,498 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Mis hábitos | SaludYa</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'saludya_app/css/styles.css' %}"
+    >
+
+    <style>
+        .habits-page {
+            min-height: 100vh;
+            padding: 3rem 1rem;
+            background: var(--bg-light);
+        }
+
+        .habits-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .habits-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .habits-header h1 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        .habits-header p {
+            color: var(--text-color);
+        }
+
+        .habits-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(280px, 1fr)
+            );
+            gap: 1.5rem;
+        }
+
+        .habit-card {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .habit-icon {
+            margin-bottom: 0.8rem;
+            font-size: 2.5rem;
+        }
+
+        .habit-card h2 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+            font-size: 1.3rem;
+        }
+
+        .habit-goal {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .habit-form label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+        }
+
+        .habit-form input,
+        .habit-form textarea {
+            width: 100%;
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-family: inherit;
+        }
+
+        .habit-form textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .habit-button {
+            width: 100%;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .habit-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .habit-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .habit-message {
+            display: none;
+            margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .habit-message.success {
+            display: block;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .habit-message.error {
+            display: block;
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .habits-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .habits-actions a {
+            display: inline-block;
+            padding: 0.8rem 1.2rem;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+
+        .progress-link {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .home-link {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-dark);
+        }
+    </style>
+</head>
+
+<body>
+
+<section class="habits-page">
+
+    <div class="habits-container">
+
+        <header class="habits-header">
+            <h1>Mis hábitos saludables</h1>
+
+            <p>
+                Registra tus actividades diarias y consulta cómo avanza
+                tu progreso.
+            </p>
+        </header>
+
+        {% csrf_token %}
+
+        <div class="habits-grid">
+
+            {% for habit in habits %}
+
+                <article class="habit-card">
+
+                    <div class="habit-icon">
+
+                        {% if habit.habit_type == 'hidratacion' %}
+                            💧
+                        {% elif habit.habit_type == 'pausa_activa' %}
+                            🏃
+                        {% elif habit.habit_type == 'medicacion' %}
+                            💊
+                        {% else %}
+                            ✅
+                        {% endif %}
+
+                    </div>
+
+                    <h2>{{ habit.name }}</h2>
+
+                    <p class="habit-goal">
+                        Meta diaria:
+                        <strong>
+                            {{ habit.daily_goal|floatformat:0 }}
+                            {{ habit.unit }}
+                        </strong>
+                    </p>
+
+                    <form
+                        class="habit-form"
+                        data-habit-id="{{ habit.id }}"
+                        data-habit-type="{{ habit.habit_type }}"
+                    >
+
+                        <label for="quantity-{{ habit.id }}">
+                            Cantidad completada
+                        </label>
+
+                        <input
+                            type="number"
+                            id="quantity-{{ habit.id }}"
+                            class="habit-quantity"
+                            min="0.1"
+                            step="0.1"
+                            required
+                            placeholder="
+                                {% if habit.habit_type == 'hidratacion' %}
+                                    Ej. 2 vasos
+                                {% elif habit.habit_type == 'pausa_activa' %}
+                                    Ej. 30 minutos
+                                {% else %}
+                                    Ej. 1 dosis
+                                {% endif %}
+                            "
+                        >
+
+                        <label for="date-{{ habit.id }}">
+                            Fecha
+                        </label>
+
+                        <input
+                            type="date"
+                            id="date-{{ habit.id }}"
+                            class="habit-date"
+                            required
+                        >
+
+                        <label for="notes-{{ habit.id }}">
+                            Notas
+                        </label>
+
+                        <textarea
+                            id="notes-{{ habit.id }}"
+                            class="habit-notes"
+                            placeholder="Información opcional"
+                        ></textarea>
+
+                        <button
+                            type="submit"
+                            class="habit-button"
+                        >
+                            Registrar actividad
+                        </button>
+
+                        <div class="habit-message"></div>
+
+                    </form>
+
+                </article>
+
+            {% empty %}
+
+                <article class="habit-card">
+                    <h2>No hay hábitos disponibles</h2>
+
+                    <p>
+                        No se encontraron hábitos activos asociados
+                        a tu cuenta.
+                    </p>
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+        <div class="habits-actions">
+
+            <a
+                href="{% url 'progreso' %}"
+                class="progress-link"
+            >
+                Ver mi progreso
+            </a>
+
+            <a
+                href="{% url 'index' %}"
+                class="home-link"
+            >
+                Volver al inicio
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<script>
+    function getCsrfToken() {
+        const csrfInput = document.querySelector(
+            '[name="csrfmiddlewaretoken"]'
+        );
+
+        return csrfInput ? csrfInput.value : '';
+    }
+
+    function getToday() {
+        const now = new Date();
+
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    }
+
+    document
+        .querySelectorAll('.habit-date')
+        .forEach(function (dateInput) {
+            dateInput.value = getToday();
+        });
+
+    document
+        .querySelectorAll('.habit-form')
+        .forEach(function (form) {
+
+            form.addEventListener(
+                'submit',
+                async function (event) {
+                    event.preventDefault();
+
+                    const habitId =
+                        Number(form.dataset.habitId);
+
+                    const quantityInput =
+                        form.querySelector('.habit-quantity');
+
+                    const dateInput =
+                        form.querySelector('.habit-date');
+
+                    const notesInput =
+                        form.querySelector('.habit-notes');
+
+                    const button =
+                        form.querySelector('.habit-button');
+
+                    const message =
+                        form.querySelector('.habit-message');
+
+                    const quantity =
+                        Number(quantityInput.value);
+
+                    const date =
+                        dateInput.value;
+
+                    const notes =
+                        notesInput.value.trim();
+
+                    message.className = 'habit-message';
+                    message.textContent = '';
+
+                    if (!quantity || quantity <= 0) {
+                        message.classList.add('error');
+                        message.textContent =
+                            'Ingresa una cantidad válida.';
+                        return;
+                    }
+
+                    if (!date) {
+                        message.classList.add('error');
+                        message.textContent =
+                            'Selecciona una fecha.';
+                        return;
+                    }
+
+                    button.disabled = true;
+                    button.textContent = 'Registrando...';
+
+                    try {
+                        const response = await fetch(
+                            "{% url 'habit_entry_create' %}",
+                            {
+                                method: 'POST',
+
+                                headers: {
+                                    'Content-Type':
+                                        'application/json',
+
+                                    'X-CSRFToken':
+                                        getCsrfToken()
+                                },
+
+                                body: JSON.stringify({
+                                    habit_id: habitId,
+                                    date: date,
+                                    quantity: quantity,
+                                    completed: true,
+                                    notes: notes
+                                })
+                            }
+                        );
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            throw new Error(
+                                data.message ||
+                                data.error ||
+                                'No fue posible registrar la actividad.'
+                            );
+                        }
+
+                        if (
+                            data.status &&
+                            data.status !== 'ok' &&
+                            data.status !== 'success'
+                        ) {
+                            throw new Error(
+                                data.message ||
+                                'Django no confirmó el registro.'
+                            );
+                        }
+
+                        message.classList.add('success');
+
+                        let successText =
+                            data.message ||
+                            'Actividad registrada correctamente.';
+
+                        if (data.progress) {
+                            const progress = data.progress;
+
+                            if (
+                                form.dataset.habitType ===
+                                'hidratacion'
+                            ) {
+                                successText +=
+                                    ` Progreso: ${progress.hydration_pct} %.`;
+                            }
+
+                            if (
+                                form.dataset.habitType ===
+                                'pausa_activa'
+                            ) {
+                                successText +=
+                                    ` Progreso: ${progress.pause_pct} %.`;
+                            }
+
+                            if (
+                                form.dataset.habitType ===
+                                'medicacion'
+                            ) {
+                                successText +=
+                                    ` Progreso: ${progress.medication_pct} %.`;
+                            }
+                        }
+
+                        message.textContent = successText;
+
+                        quantityInput.value = '';
+                        notesInput.value = '';
+
+                    } catch (error) {
+                        console.error(error);
+
+                        message.classList.add('error');
+
+                        message.textContent =
+                            error.message ||
+                            'Ocurrió un error inesperado.';
+                    } finally {
+                        button.disabled = false;
+
+                        button.textContent =
+                            'Registrar actividad';
+                    }
+                }
+            );
+        });
+</script>
+
+</body>
+</html>

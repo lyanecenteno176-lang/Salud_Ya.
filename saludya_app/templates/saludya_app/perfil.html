@@ -7,6 +7,36 @@
     <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
 </head>
 <body style="background-color: var(--bg-light); padding: 3rem 0;">
+<nav class="top-nav">
+    <div class="nav-container">
+
+        <a href="{% url 'index' %}" class="nav-logo">
+            🩺 SaludYa
+        </a>
+
+        <div class="nav-links">
+            <a href="{% url 'index' %}">🏠 Inicio</a>
+
+            <a href="{% url 'progreso' %}">
+                📊 Progreso
+            </a>
+
+            <a href="{% url 'historial' %}">
+                📅 Historial
+            </a>
+
+            <a href="{% url 'marketplace' %}">
+                🛒 Marketplace
+            </a>
+
+            <a href="{% url 'perfil' %}">
+                👤 Perfil
+            </a>
+        </div>
+
+    </div>
+</nav>
+<main style="padding-top: 2rem;">
     <div class="container" style="max-width: 900px; background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
         <div class="profile-header">
             <div class="profile-avatar">
@@ -221,5 +251,6 @@
             return false;
         }
     </script>
+</main>
 </body>
 </html>

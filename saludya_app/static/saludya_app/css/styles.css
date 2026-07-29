@@ -32,7 +32,7 @@
 
 
 /* =========================================================
-   1. VARIABLES DEL SISTEMA DE DISEÑO SALUD YA
+VARIABLES DEL SISTEMA DE DISEÑO SALUD YA
 ========================================================= */
 
 :root {
@@ -137,7 +137,7 @@
 
 
 /* =========================================================
-   2. REINICIO GENERAL DE SALUD YA
+REINICIO GENERAL DE SALUD YA
 ========================================================= */
 
 *,
@@ -215,7 +215,7 @@ ol {
 
 
 /* =========================================================
-   3. TIPOGRAFÍA Y JERARQUÍA DE SALUD YA
+ TIPOGRAFÍA Y JERARQUÍA DE SALUD YA
 ========================================================= */
 
 h1,
@@ -292,7 +292,7 @@ strong {
 
 
 /* =========================================================
-   4. ESTRUCTURA GENERAL DE SALUD YA
+ESTRUCTURA GENERAL DE SALUD YA
 ========================================================= */
 
 .container {
@@ -380,7 +380,7 @@ section {
 
 
 /* =========================================================
-   5. ENCABEZADO PRINCIPAL DE SALUD YA
+ ENCABEZADO PRINCIPAL DE SALUD YA
 ========================================================= */
 
 .main-header {
@@ -531,7 +531,7 @@ section {
 
 
 /* =========================================================
-   6. HERO PRINCIPAL DE SALUD YA
+   HERO PRINCIPAL DE SALUD YA
 ========================================================= */
 
 .hero-section {
@@ -678,7 +678,7 @@ section {
 
 
 /* =========================================================
-   7. SISTEMA DE BOTONES DE SALUD YA
+   SISTEMA DE BOTONES DE SALUD YA
 ========================================================= */
 
 .btn-main,
@@ -888,7 +888,7 @@ button:disabled,
 
 
 /* =========================================================
-   8. SECCIÓN DE FUNCIONES DE SALUD YA
+ SECCIÓN DE FUNCIONES DE SALUD YA
 ========================================================= */
 
 .features-section {
@@ -1011,7 +1011,7 @@ button:disabled,
 
 
 /* =========================================================
-   9. CLASES UTILITARIAS INICIALES DE SALUD YA  
+   CLASES UTILITARIAS INICIALES DE SALUD YA  
 ========================================================= */
 
 .d-flex {
@@ -1103,7 +1103,7 @@ button:disabled,
 }
 
 /* =========================================================
-   10. DASHBOARD
+    DASHBOARD
 ========================================================= */
 
 .dashboard-header {
@@ -1192,7 +1192,7 @@ button:disabled,
 
 
 /* =========================================================
-   11. TARJETAS DE RESUMEN
+    TARJETAS DE RESUMEN
 ========================================================= */
 
 .overview-card {
@@ -1295,7 +1295,7 @@ button:disabled,
 
 
 /* =========================================================
-   12. PANELES DEL DASHBOARD
+    PANELES DEL DASHBOARD
 ========================================================= */
 
 .chart-panel,
@@ -1392,7 +1392,7 @@ button:disabled,
 
 
 /* =========================================================
-   13. PERFIL
+   PERFIL
 ========================================================= */
 
 .profile-header {
@@ -1526,7 +1526,7 @@ button:disabled,
 
 
 /* =========================================================
-   14. HÁBITOS, PROGRESO Y METAS
+    HÁBITOS, PROGRESO Y METAS
 ========================================================= */
 
 .habit-summary-grid {
@@ -1660,7 +1660,7 @@ button:disabled,
 
 
 /* =========================================================
-   15. PLANES Y RECOMENDACIONES
+   PLANES Y RECOMENDACIONES
 ========================================================= */
 
 .plans-grid {
@@ -1781,7 +1781,7 @@ button:disabled,
 
 
 /* =========================================================
-   16. BLOQUES DE DATOS Y ESTADÍSTICAS
+    BLOQUES DE DATOS Y ESTADÍSTICAS
 ========================================================= */
 
 .stats-grid {
@@ -1842,7 +1842,7 @@ button:disabled,
 
 
 /* =========================================================
-   17. TARJETAS DE LOGROS Y RECOMPENSAS
+    TARJETAS DE LOGROS Y RECOMPENSAS
 ========================================================= */
 
 .badges-grid,
@@ -1925,7 +1925,7 @@ button:disabled,
 }
 
 /* =========================================================
-   18. FORMULARIOS
+    FORMULARIOS
 ========================================================= */
 
 form {
@@ -2077,7 +2077,7 @@ form {
 
 
 /* =========================================================
-   19. LOGIN
+    LOGIN
 ========================================================= */
 
 .login-page {
@@ -2211,7 +2211,7 @@ form {
 
 
 /* =========================================================
-   20. REGISTRO
+   REGISTRO
 ========================================================= */
 
 .body-registro {
@@ -2307,7 +2307,7 @@ form {
 
 
 /* =========================================================
-   21. HISTORIAL Y TIMELINE
+    HISTORIAL Y TIMELINE
 ========================================================= */
 
 .history-container {
@@ -2403,7 +2403,7 @@ form {
 
 
 /* =========================================================
-   22. BADGES, ETIQUETAS Y ESTADOS
+    BADGES, ETIQUETAS Y ESTADOS
 ========================================================= */
 
 .badge {
@@ -2474,7 +2474,7 @@ form {
 
 
 /* =========================================================
-   23. MODALES
+    MODALES
 ========================================================= */
 
 .modal-overlay {
@@ -2586,7 +2586,7 @@ form {
 
 
 /* =========================================================
-   24. TABLAS
+    TABLAS
 ========================================================= */
 
 .table-wrapper {
@@ -2648,7 +2648,7 @@ tbody tr:last-child td {
 
 
 /* =========================================================
-   25. ALERTAS Y MENSAJES
+    ALERTAS Y MENSAJES
 ========================================================= */
 
 .alert {
@@ -2711,7 +2711,7 @@ tbody tr:last-child td {
 
 
 /* =========================================================
-   26. CONTENEDORES VACÍOS
+    CONTENEDORES VACÍOS
 ========================================================= */
 
 .empty-state {
@@ -2756,7 +2756,7 @@ tbody tr:last-child td {
 }
 
 /* =========================================================
-   22. MARKETPLACE
+    MARKETPLACE
 ========================================================= */
 
 .marketplace-header {
@@ -3148,7 +3148,7 @@ tbody tr:last-child td {
 
 
 /* =========================================================
-  23. DETALLE DE PRODUCTO, CARRITO Y CHECKOUT
+   DETALLE DE PRODUCTO, CARRITO Y CHECKOUT
 ========================================================= */
 
 .product-detail {
@@ -3889,4 +3889,49 @@ a,
 
 .hidden {
     display: none !important;
+}
+
+/* =====================================
+   MENÚ DE NAVEGACIÓN
+===================================== */
+
+.top-nav{
+    width:100%;
+    background:#011627;
+    position:sticky;
+    top:0;
+    z-index:999;
+    box-shadow:0 4px 12px rgba(0,0,0,.12);
+}
+
+.nav-container{
+    max-width:1200px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 25px;
+}
+
+.nav-logo{
+    color:white;
+    text-decoration:none;
+    font-weight:700;
+    font-size:22px;
+}
+
+.nav-links{
+    display:flex;
+    gap:20px;
+}
+
+.nav-links a{
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+    transition:.25s;
+}
+
+.nav-links a:hover{
+    color:#2ec4b6;
 }

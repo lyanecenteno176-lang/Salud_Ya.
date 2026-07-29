@@ -134,20 +134,35 @@
 </head>
 
 <body style="background: var(--bg-light); padding-bottom:3rem;">
+    <nav class="top-nav">
+    <div class="nav-container">
 
-<script>
-window.addEventListener("DOMContentLoaded", function () {
-    const usuarioActivo = localStorage.getItem("usuarioSaludYa");
+        <a href="{% url 'index' %}" class="nav-logo">
+            🩺 SaludYa
+        </a>
+        <div class="nav-links">
+            <a href="{% url 'index' %}">🏠 Inicio</a>
 
-    if (!usuarioActivo) {
-        console.info("Historial abierto sin sesión persistida; se cargan datos por defecto.");
-    }
+            <a href="{% url 'progreso' %}">
+                📊 Progreso
+            </a>
 
-    if (typeof cargarDatosDinamicos === "function") {
-        cargarDatosDinamicos();
-    }
-});
-</script>
+            <a href="{% url 'historial' %}">
+                📅 Historial
+            </a>
+
+            <a href="{% url 'marketplace' %}">
+                🛒 Marketplace
+            </a>
+
+            <a href="{% url 'perfil' %}">
+                👤 Perfil
+            </a>
+        </div>
+
+    </div>
+</nav>
+<main style="padding-top: 2rem;">
 
 <header class="main-header">
 
@@ -216,96 +231,153 @@ window.addEventListener("DOMContentLoaded", function () {
 
     <section class="dashboard-grid">
 
-        <div class="metric-card">
+    <div class="metric-card">
+        <div class="metric-icon">💧</div>
 
-            <div class="metric-icon">🔥</div>
+        <div class="metric-data">
+            <h3>{{ agua_hoy|floatformat:0 }} ml</h3>
+            <p>Agua consumida hoy</p>
+        </div>
+    </div>
 
-            <div class="metric-data">
-                <h3 id="calorias-val">0 kcal</h3>
-                <p>Calorías Quemadas Hoy</p>
+    <div class="metric-card">
+        <div class="metric-icon">🏃</div>
+
+        <div class="metric-data">
+            <h3>{{ ejercicio_hoy|floatformat:0 }} minutos</h3>
+            <p>Actividad física registrada hoy</p>
+        </div>
+    </div>
+
+    <div class="metric-card">
+        <div class="metric-icon">💊</div>
+
+        <div class="metric-data">
+            <h3>{{ medicamentos_hoy }}</h3>
+            <p>Medicamentos registrados hoy</p>
+        </div>
+    </div>
+
+</section>
+
+<section class="history-container">
+
+    <div class="history-header">
+
+        <h3 style="color:var(--secondary-color);">
+            Línea de Tiempo
+        </h3>
+
+    </div>
+
+    <div class="timeline" id="timeline-container">
+
+        {% for entrada in entradas %}
+
+            <div class="timeline-item">
+
+                {% if entrada.habit.habit_type == 'medicacion' %}
+
+                    <div
+                        class="timeline-dot"
+                        style="background:#c62828;">
+                    </div>
+
+                    <span class="timeline-time">
+                        {{ entrada.date|date:"d/m/Y" }}
+                    </span>
+
+                    <div class="timeline-title">
+                        {{ entrada.habit.name }}
+
+                        <span class="badge badge-med">
+                            Medicación
+                        </span>
+                    </div>
+
+                {% elif entrada.habit.habit_type == 'pausa_activa' %}
+
+                    <div
+                        class="timeline-dot"
+                        style="background:#2e7d32;">
+                    </div>
+
+                    <span class="timeline-time">
+                        {{ entrada.date|date:"d/m/Y" }}
+                    </span>
+
+                    <div class="timeline-title">
+                        {{ entrada.habit.name }}
+
+                        <span class="badge badge-ejercicio">
+                            Ejercicio
+                        </span>
+                    </div>
+
+                {% elif entrada.habit.habit_type == 'hidratacion' %}
+
+                    <div
+                        class="timeline-dot"
+                        style="background:#00838f;">
+                    </div>
+
+                    <span class="timeline-time">
+                        {{ entrada.date|date:"d/m/Y" }}
+                    </span>
+
+                    <div class="timeline-title">
+                        {{ entrada.habit.name }}
+
+                        <span class="badge badge-agua">
+                            Hidratación
+                        </span>
+                    </div>
+
+                {% endif %}
+
+                <div class="timeline-details">
+
+                    Cantidad:
+
+                    <strong>
+                        {{ entrada.quantity|floatformat:0 }}
+                        {{ entrada.habit.unit }}
+                    </strong>
+
+                    {% if entrada.notes %}
+                        <br>
+                        Detalles: {{ entrada.notes }}
+                    {% endif %}
+
+                </div>
+
             </div>
 
-        </div>
+        {% empty %}
 
-        <div class="metric-card">
+            <div style="padding:2rem;text-align:center;color:#666;">
+                <p style="font-size:2rem;margin-bottom:.5rem;">📭</p>
 
-            <div class="metric-icon">❤️</div>
-
-            <div class="metric-data">
-                <h3 id="pulsaciones-val">0 BPM</h3>
-                <p>Pulsaciones Promedio</p>
+                <p>
+                    Todavía no has registrado actividades.
+                </p>
             </div>
 
-        </div>
+        {% endfor %}
 
-        <div class="metric-card">
+    </div>
 
-            <div class="metric-icon">💧</div>
-
-            <div class="metric-data">
-                <h3 id="agua-val">0 ml</h3>
-                <p>Agua Consumida Hoy</p>
-            </div>
-
-        </div>
-
-    </section>
-
-    <section class="history-container">
-
-        <div class="history-header">
-
-            <h3 style="color:var(--secondary-color);">
-                Línea de Tiempo
-            </h3>
-
-            <input
-                type="date"
-                id="filtro-fecha"
-                style="
-                    padding:.6rem;
-                    border:1px solid #ccc;
-                    border-radius:8px;
-                ">
-
-        </div>
-
-        <div
-            class="timeline"
-            id="timeline-container">
-
-        </div>
-
-    </section>
+</section>
 
 </main>
 <script>
-const ejerciciosDinamicos = [
-    { tipo: "Caminata Ligera / Pausa Activa", mins: 15 },
-    { tipo: "Caminata Acelerada", mins: 30 },
-    { tipo: "Estiramientos y Movilidad", mins: 20 },
-    { tipo: "Cardio Suave de Oficina", mins: 25 },
-    { tipo: "Entrenamiento Funcional", mins: 40 },
-    { tipo: "Rutina de Yoga", mins: 35 }
-];
 
-const medicamentosDinamicos = [
-    { nombre: "Paracetamol 500 mg", dosis: "Dosis matutina tomada correctamente." },
-    { nombre: "Vitamina C + Zinc", dosis: "Suplemento diario registrado." },
-    { nombre: "Ibuprofeno 400 mg", dosis: "Tomado según indicación médica." },
-    { nombre: "Omeprazol 20 mg", dosis: "Administrado antes del desayuno." },
-    { nombre: "Loratadina 10 mg", dosis: "Registro diario completado." }
-];
+
 
 document.getElementById("filtro-fecha").valueAsDate = new Date();
 window.addEventListener("DOMContentLoaded", cargarDatosDinamicos);
 
-function cargarDatosDinamicos() {
-    let calorias = localStorage.getItem("sesion_calorias");
-    let pulsaciones = localStorage.getItem("sesion_pulsaciones");
-    let agua = localStorage.getItem("sesion_agua");
-    let ejIndex = localStorage.getItem("sesion_ej_index");
-    let medIndex = localStorage.getItem("sesion_med_index");
+
 
     if (!calorias) {
         calorias = Math.floor(Math.random() * 220) + 180;
@@ -324,14 +396,6 @@ function cargarDatosDinamicos() {
     document.getElementById("calorias-val").innerHTML = calorias + " kcal";
     document.getElementById("pulsaciones-val").innerHTML = pulsaciones + " BPM";
     document.getElementById("agua-val").innerHTML = Number(agua).toLocaleString() + " ml";
-
-    renderizarTimeline(calorias, agua, pulsaciones, ejIndex, medIndex);
-}
-
-function renderizarTimeline(calorias, agua, pulsaciones, ejIndex, medIndex) {
-    const ejercicio = ejerciciosDinamicos[ejIndex];
-    const medicamento = medicamentosDinamicos[medIndex];
-    const timeline = document.getElementById("timeline-container");
 
     timeline.innerHTML = `
         <div class="timeline-item">
@@ -370,22 +434,15 @@ function renderizarTimeline(calorias, agua, pulsaciones, ejIndex, medIndex) {
             </div>
         </div>
     `;
-}
 
 function cerrarSesion() {
-    localStorage.removeItem("usuarioSaludYa");
-    localStorage.removeItem("sesion_calorias");
-    localStorage.removeItem("sesion_pulsaciones");
-    localStorage.removeItem("sesion_agua");
-    localStorage.removeItem("sesion_ej_index");
-    localStorage.removeItem("sesion_med_index");
-    alert("Has cerrado sesión.");
-    window.location.href = "{% url 'index' %}";
+    window.location.href = "{% url 'logout' %}";
 }
 </script>
 
 <!-- Script de Notificaciones en Tiempo Real -->
 <script src="{% static 'saludya_app/js/notificaciones.js' %}"></script>
+</main>
 </body>
 </html>
 

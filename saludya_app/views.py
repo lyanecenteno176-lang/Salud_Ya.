@@ -2,10 +2,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.utils.text import slugify
 from django.templatetags.static import static
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from .models import HabitEntry
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from django.utils import timezone
 from .models import (
     Habit,
     HabitEntry,
@@ -130,21 +136,132 @@ def login_view(request):
 
     return render(request, 'saludya_app/login.html')
 
-
 def config_agua(request):
-    """Configuración de recordatorios de hidratación."""
-    return render(request, 'saludya_app/config-agua.html')
+    """Registrar actividades de hidratación."""
 
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    habit = Habit.objects.filter(
+        user=request.user,
+        habit_type='hidratacion',
+        active=True,
+    ).first()
+
+    if habit is None:
+        habit = Habit.objects.create(
+            user=request.user,
+            name='Consumo diario de agua',
+            habit_type='hidratacion',
+            daily_goal=8,
+            unit='vasos',
+            active=True,
+        )
+
+    return render(
+        request,
+        'saludya_app/config-agua.html',
+        {'habit': habit},
+    )
 
 def config_ejercicios(request):
-    """Configuración de pausas activas."""
-    return render(request, 'saludya_app/config-ejercicios.html')
+    if not request.user.is_authenticated:
+        return redirect('index')
+
+    habit, created = Habit.objects.get_or_create(
+        user=request.user,
+        habit_type='pausa_activa',
+        defaults={
+            'name': 'Actividad física diaria',
+            'daily_goal': 30,
+            'unit': 'minutos',
+            'active': True,
+        },
+    )
+
+    return render(
+        request,
+        'saludya_app/config-ejercicios.html',
+        {
+            'habit': habit,
+        },
+    )
 
 
 def config_medicinas(request):
-    """Configuración de medicamentos."""
-    return render(request, 'saludya_app/config-medicinas.html')
+    if not request.user.is_authenticated:
+        return redirect('index')
 
+    habit, created = Habit.objects.get_or_create(
+        user=request.user,
+        habit_type='medicacion',
+        defaults={
+            'name': 'Medicamentos diarios',
+            'daily_goal': 1,
+            'unit': 'dosis',
+            'active': True,
+        },
+    )
+
+    return render(
+        request,
+        'saludya_app/config-medicinas.html',
+        {
+            'habit': habit,
+        },
+    )
+
+def mis_habitos(request):
+    """Panel central para registrar hidratación, actividad y medicación."""
+
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    habit_defaults = [
+        {
+            'habit_type': 'hidratacion',
+            'name': 'Consumo diario de agua',
+            'daily_goal': 8,
+            'unit': 'vasos',
+        },
+        {
+            'habit_type': 'pausa_activa',
+            'name': 'Actividad física diaria',
+            'daily_goal': 30,
+            'unit': 'minutos',
+        },
+        {
+            'habit_type': 'medicacion',
+            'name': 'Medicamento diario',
+            'daily_goal': 1,
+            'unit': 'dosis',
+        },
+    ]
+
+    for habit_data in habit_defaults:
+        Habit.objects.get_or_create(
+            user=request.user,
+            habit_type=habit_data['habit_type'],
+            defaults={
+                'name': habit_data['name'],
+                'daily_goal': habit_data['daily_goal'],
+                'unit': habit_data['unit'],
+                'active': True,
+            },
+        )
+
+    habits = Habit.objects.filter(
+        user=request.user,
+        active=True,
+    ).order_by('habit_type')
+
+    return render(
+        request,
+        'saludya_app/mis-habitos.html',
+        {
+            'habits': habits,
+        },
+    )
 
 def perfil(request):
     """Página de perfil del usuario."""
@@ -280,9 +397,9 @@ def progreso(request):
     
     user = request.user
     habits = Habit.objects.filter(user=user, active=True)
-    entries = HabitEntry.objects.filter(habit__user=user).order_by('-date')[:10]
+    entries = (HabitEntry.objects.filter(habit__user=user).select_related('habit').order_by('-date', '-id')[:10])
     badges = Badge.objects.filter(user=user, achieved=True)
-    progress_records = ProgressRecord.objects.filter(user=user).order_by('-date')[:4]
+    progress_records = (ProgressRecord.objects.filter(user=user).order_by('-date', '-id')[:4])
     profile = _get_profile(user)
     
     # Calcular progreso de insignia
@@ -312,20 +429,27 @@ def gamification_dashboard(request):
     if not request.user.is_authenticated:
         return redirect('index')
 
-    profile = _get_profile(request.user)
-    
-    # Calcular progreso de insignia
+    user = request.user
+    profile = _get_profile(user)
+
     badge_progress = 0
-    if profile and profile.next_badge_target and profile.next_badge_target > 0:
-        badge_progress = int((profile.points_total / profile.next_badge_target) * 100)
+
+    if profile and profile.next_badge_target:
+        badge_progress = int(
+            (profile.points_total / profile.next_badge_target) * 100
+        )
         badge_progress = min(badge_progress, 100)
-    
-    badges = Badge.objects.filter(user=request.user, achieved=True)
-    challenges = UserChallenge.objects.filter(user=request.user, completed=False)
-    profile = _get_profile(request.user) if request.user.is_authenticated else None
-    badge_progress = int((profile.points_total / profile.next_badge_target) * 100) if profile and profile.next_badge_target else 0
-    badges = Badge.objects.filter(user=request.user, achieved=True) if request.user.is_authenticated else Badge.objects.none()
-    challenges = UserChallenge.objects.filter(user=request.user, completed=False) if request.user.is_authenticated else UserChallenge.objects.none()
+
+    badges = Badge.objects.filter(
+        user=user,
+        achieved=True
+    )
+
+    challenges = UserChallenge.objects.filter(
+        user=user,
+        completed=False
+    )
+
     rewards = Reward.objects.filter(active=True)
 
     context = {
@@ -334,9 +458,14 @@ def gamification_dashboard(request):
         'badges': badges,
         'challenges': challenges,
         'rewards': rewards,
-        'is_authenticated': request.user.is_authenticated,
+        'is_authenticated': True,
     }
-    return render(request, 'saludya_app/gamification_dashboard.html', context)
+
+    return render(
+        request,
+        'saludya_app/gamification_dashboard.html',
+        context
+    )
 
 
 def redeem_reward(request, reward_id):
@@ -468,24 +597,192 @@ def habit_delete(request, habit_id):
     return redirect('progreso')
 
 
+def _update_daily_progress(user, entry_date):
+    """
+    Crear o actualizar el progreso diario del usuario
+    según las cantidades registradas y la meta diaria.
+    """
+
+    habit_types = {
+        'hidratacion': 'hydration_pct',
+        'pausa_activa': 'pause_pct',
+        'medicacion': 'medication_pct',
+    }
+
+    percentages = {
+        'hydration_pct': 0.0,
+        'pause_pct': 0.0,
+        'medication_pct': 0.0,
+    }
+
+    for habit_type, progress_field in habit_types.items():
+
+        habits = Habit.objects.filter(
+            user=user,
+            active=True,
+            habit_type=habit_type,
+        )
+
+        habit_count = habits.count()
+
+        if habit_count == 0:
+            percentages[progress_field] = 0.0
+            continue
+
+        total_percentage = 0.0
+
+        for habit in habits:
+
+            completed_quantity = HabitEntry.objects.filter(
+                habit=habit,
+                date=entry_date,
+                completed=True,
+            ).aggregate(
+                total_quantity=Sum('quantity')
+            )['total_quantity'] or 0.0
+
+            if habit.daily_goal > 0:
+                habit_percentage = (
+                    completed_quantity / habit.daily_goal
+                ) * 100
+            else:
+                habit_percentage = 0.0
+
+            habit_percentage = min(habit_percentage, 100.0)
+
+            total_percentage += habit_percentage
+
+        percentages[progress_field] = round(
+            total_percentage / habit_count,
+            2,
+        )
+
+    progress_record, created = ProgressRecord.objects.update_or_create(
+        user=user,
+        date=entry_date,
+        period='daily',
+        defaults=percentages,
+    )
+
+    return progress_record
+
 @csrf_exempt
 @require_POST
 def habit_entry_create(request):
-    """Crear una entrada de hábito (completar un hábito)."""
+    """Crear una entrada de hábito y actualizar el progreso diario."""
+
     if not request.user.is_authenticated:
-        return JsonResponse({'status': 'error', 'message': 'No autenticado'}, status=401)
+        return JsonResponse(
+            {
+                'status': 'error',
+                'message': 'No autenticado',
+            },
+            status=401,
+        )
 
     try:
         payload = json.loads(request.body)
-        habit = get_object_or_404(Habit, pk=payload.get('habit_id'), user=request.user)
-        
+
+        habit_id = payload.get('habit_id')
+        entry_date_text = payload.get('date')
+
+        if not habit_id:
+            return JsonResponse(
+                {
+                    'status': 'error',
+                    'message': 'No se recibió el hábito.',
+                },
+                status=400,
+            )
+
+        if not entry_date_text:
+            return JsonResponse(
+                {
+                    'status': 'error',
+                    'message': 'No se recibió la fecha.',
+                },
+                status=400,
+            )
+
+        habit = get_object_or_404(
+            Habit,
+            pk=habit_id,
+            user=request.user,
+        )
+
+        entry_date = datetime.date.fromisoformat(
+            entry_date_text
+        )
+
+        completed = payload.get(
+            'completed',
+            False,
+        )
+
+        if isinstance(completed, str):
+            completed = completed.lower() in (
+                'true',
+                '1',
+                'yes',
+                'si',
+                'sí',
+            )
+
+        quantity_value = payload.get(
+            'quantity',
+            0,
+        )
+
+        if quantity_value in (None, ''):
+            quantity_value = 0
+
+        quantity = float(quantity_value)
+
+        if quantity <= 0:
+            return JsonResponse(
+                {
+                    'status': 'error',
+                    'message': (
+                        'La cantidad debe ser mayor que cero.'
+                    ),
+                },
+                status=400,
+            )
+
         entry = HabitEntry.objects.create(
             habit=habit,
-            date=datetime.date.fromisoformat(payload.get('date')),
-            quantity=float(payload.get('quantity', 0)),
-            completed=payload.get('completed', False),
+            date=entry_date,
+            quantity=quantity,
+            completed=completed,
             notes=payload.get('notes', ''),
         )
+
+        progress_record = _update_daily_progress(
+            request.user,
+            entry.date,
+        )
+
+        response_data = {
+            'status': 'ok',
+            'message': (
+                'Entrada registrada y progreso actualizado.'
+            ),
+            'entry_id': entry.id,
+            'progress': {
+                'hydration_pct': round(
+                    progress_record.hydration_pct,
+                    2,
+                ),
+                'pause_pct': round(
+                    progress_record.pause_pct,
+                    2,
+                ),
+                'medication_pct': round(
+                    progress_record.medication_pct,
+                    2,
+                ),
+            },
+        }
 
         if entry.completed:
             points_map = {
@@ -493,56 +790,97 @@ def habit_entry_create(request):
                 'pausa_activa': 15,
                 'medicacion': 20,
             }
-            points = points_map.get(habit.habit_type, 5)
-            profile = _award_points(request.user, points, f'Cumplió {habit.name}', entry=entry)
+
+            points = points_map.get(
+                habit.habit_type,
+                5,
+            )
+
+            profile = _award_points(
+                request.user,
+                points,
+                f'Cumplió {habit.name}',
+                entry=entry,
+            )
 
             if profile:
                 if habit.habit_type == 'hidratacion':
                     profile.hydration_streak += 1
+
                 elif habit.habit_type == 'pausa_activa':
                     profile.pause_streak += 1
+
                 elif habit.habit_type == 'medicacion':
                     profile.medication_streak += 1
+
                 profile.save()
 
-                _unlock_badge(request.user, 'Primer logro', 'Completa tu primer hábito del día', icon='🥇')
-                _update_challenges(request.user, habit.habit_type, entry.date)
+                _unlock_badge(
+                    request.user,
+                    'Primer logro',
+                    'Completa tu primer hábito del día',
+                    icon='🥇',
+                )
 
-                return JsonResponse({
-                    'status': 'ok',
-                    'message': f'¡Has ganado {points} puntos y desbloqueado progreso!',
-                    'points_total': profile.points_total,
-                    'next_badge': profile.points_to_next_level,
-                })
+                _update_challenges(
+                    request.user,
+                    habit.habit_type,
+                    entry.date,
+                )
 
-        return JsonResponse({'status': 'ok', 'message': 'Entrada registrada.'})
-        
-    except Exception as e:
-        logger.error(f"Error creando entrada de hábito: {str(e)}")
-        return JsonResponse({'status': 'error', 'message': 'Error al registrar la entrada.'}, status=400)
+                response_data['message'] = (
+                    f'¡Has ganado {points} puntos '
+                    'y actualizado tu progreso!'
+                )
 
+                response_data['points_total'] = (
+                    profile.points_total
+                )
 
-def habit_entry_list(request):
-    """Obtener lista de entradas de hábitos del usuario."""
-    if not request.user.is_authenticated:
-        return JsonResponse({'entries': []})
+                response_data['next_badge'] = getattr(
+                    profile,
+                    'next_badge_target',
+                    0,
+                )
 
-    try:
-        entries = HabitEntry.objects.filter(habit__user=request.user).order_by('-date')[:20]
-        data = [
+        return JsonResponse(response_data)
+
+    except json.JSONDecodeError:
+        return JsonResponse(
             {
-                'habit': entry.habit.name,
-                'date': entry.date.isoformat(),
-                'quantity': entry.quantity,
-                'completed': entry.completed,
-                'notes': entry.notes,
-            }
-            for entry in entries
-        ]
-        return JsonResponse({'entries': data})
-    except Exception as e:
-        logger.error(f"Error listando entradas de hábitos: {str(e)}")
-        return JsonResponse({'entries': [], 'error': 'Error al obtener historial.'}, status=500)
+                'status': 'error',
+                'message': (
+                    'Los datos enviados no son JSON válido.'
+                ),
+            },
+            status=400,
+        )
+
+    except ValueError:
+        return JsonResponse(
+            {
+                'status': 'error',
+                'message': (
+                    'La fecha o la cantidad tienen '
+                    'un formato inválido.'
+                ),
+            },
+            status=400,
+        )
+
+    except Exception as error:
+        logger.exception(
+            'Error creando entrada de hábito: %s',
+            str(error),
+        )
+
+        return JsonResponse(
+            {
+                'status': 'error',
+                'message': str(error),
+            },
+            status=500,
+        )
 
 
 def export_progress_pdf(request):
@@ -676,10 +1014,55 @@ def api_points(request):
     except Exception as e:
         logger.error(f"Error en api_points: {str(e)}")
         return JsonResponse({'error': 'Error al obtener puntos.'}, status=500)
-    
+ 
+@login_required
 def historial(request):
-    return render(request, 'saludya_app/historial.html')
+    hoy = timezone.localdate()
 
+    entradas = (
+        HabitEntry.objects
+        .filter(habit__user=request.user)
+        .select_related('habit')
+        .order_by('-date', '-id')
+    )
+
+    entradas_hoy = entradas.filter(date=hoy)
+
+    agua_hoy = (
+        entradas_hoy
+        .filter(habit__habit_type='hidratacion')
+        .aggregate(total=Sum('quantity'))
+        .get('total')
+        or 0
+    )
+
+    ejercicio_hoy = (
+        entradas_hoy
+        .filter(habit__habit_type='pausa_activa')
+        .aggregate(total=Sum('quantity'))
+        .get('total')
+        or 0
+    )
+
+    medicamentos_hoy = (
+        entradas_hoy
+        .filter(habit__habit_type='medicacion')
+        .count()
+    )
+
+    context = {
+        'entradas': entradas,
+        'agua_hoy': agua_hoy,
+        'ejercicio_hoy': ejercicio_hoy,
+        'medicamentos_hoy': medicamentos_hoy,
+        'hoy': hoy,
+    }
+
+    return render(
+        request,
+        'saludya_app/historial.html',
+        context,
+    )
 
 def api_badges(request):
     if not request.user.is_authenticated:
@@ -857,8 +1240,101 @@ def marketplace(request):
 
 
 def market_view(request):
-    return render(request, 'saludya_app/market.html')
+    try:
+        categories = MarketplaceCategory.objects.filter(active=True)
 
+        products = Product.objects.filter(
+            stock__gt=0
+        ).select_related('category')
+
+        category_slug = request.GET.get('category', '').strip()
+        min_price = request.GET.get('min_price', '').strip()
+        max_price = request.GET.get('max_price', '').strip()
+        search = request.GET.get('search', '').strip()
+
+        if category_slug:
+            products = products.filter(category__slug=category_slug)
+
+        if min_price:
+            products = products.filter(price__gte=min_price)
+
+        if max_price:
+            products = products.filter(price__lte=max_price)
+
+        if search:
+            products = products.filter(
+                Q(name__icontains=search) |
+                Q(description__icontains=search)
+            )
+
+        products = products.order_by(
+            'category__name',
+            '-featured',
+            '-popularity',
+            'name'
+        )
+
+        for product in products:
+            product.image_url = _normalize_product_image_url(product)
+
+        featured = Product.objects.filter(
+            featured=True,
+            stock__gt=0
+        ).select_related('category')[:6]
+
+        for product in featured:
+            product.image_url = _normalize_product_image_url(product)
+
+        recommended = (
+            _recommend_products(request.user)
+            if request.user.is_authenticated
+            else featured
+        )
+
+        for product in recommended:
+            product.image_url = _normalize_product_image_url(product)
+
+        cart = (
+            _get_user_cart(request.user)
+            if request.user.is_authenticated
+            else None
+        )
+
+        context = {
+            'categories': categories,
+            'products': products,
+            'featured': featured,
+            'recommended': recommended,
+            'cart': cart,
+            'selected_category': category_slug,
+            'search_query': search,
+            'min_price': min_price,
+            'max_price': max_price,
+            'product_count': products.count(),
+        }
+
+        return render(
+            request,
+            'saludya_app/market.html',
+            context
+        )
+
+    except Exception as e:
+        logger.exception("Error cargando market.html")
+
+        return render(
+            request,
+            'saludya_app/market.html',
+            {
+                'categories': MarketplaceCategory.objects.none(),
+                'products': Product.objects.none(),
+                'featured': Product.objects.none(),
+                'recommended': Product.objects.none(),
+                'cart': None,
+                'product_count': 0,
+                'error': f'No se pudo cargar el marketplace: {str(e)}',
+            }
+        )
 
 def product_detail(request, product_id):
     """Detalle de un producto."""
@@ -1285,3 +1761,7 @@ def api_orders(request):
     except Exception as e:
         logger.error(f"Error en api_orders: {str(e)}")
         return JsonResponse({'orders': [], 'error': 'Error al obtener órdenes.'}, status=500)
+
+def logout_view(request):
+    logout(request)
+    return redirect('index')

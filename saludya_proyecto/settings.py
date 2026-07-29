@@ -51,9 +51,23 @@ WSGI_APPLICATION = 'saludya_proyecto.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'mssql',
+        'NAME': 'SaludYa',
+        'HOST': r'.\SQLEXPRESS',
+        'PORT': '',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 18 for SQL Server',
+            'extra_params': (
+                'Trusted_Connection=yes;'
+                'TrustServerCertificate=yes;'
+            ),
+        },
+    },
+
+    'sqlite_old': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    },
 }
 
 AUTH_PASSWORD_VALIDATORS = [

@@ -7,6 +7,36 @@
     <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
 </head>
 <body style="background-color: var(--bg-light); padding: 3rem 0;">
+<nav class="top-nav">
+    <div class="nav-container">
+
+        <a href="{% url 'index' %}" class="nav-logo">
+            🩺 SaludYa
+        </a>
+
+        <div class="nav-links">
+            <a href="{% url 'index' %}">🏠 Inicio</a>
+
+            <a href="{% url 'progreso' %}">
+                📊 Progreso
+            </a>
+
+            <a href="{% url 'historial' %}">
+                📅 Historial
+            </a>
+
+            <a href="{% url 'marketplace' %}">
+                🛒 Marketplace
+            </a>
+
+            <a href="{% url 'perfil' %}">
+                👤 Perfil
+            </a>
+        </div>
+
+    </div>
+</nav>   
+<main style="padding-top: 2rem;">
     <script>
         // Bloqueo de seguridad: Verificar si el usuario ha iniciado sesión
         const usuarioActivo = localStorage.getItem('usuarioSaludYa');
@@ -25,6 +55,11 @@
         </div>
 
         <form id="formActividad" class="activity-form">
+            <input
+                type="hidden"
+                id="habitId"
+                value="{{ habit.id }}"
+            >
             <div class="form-group" style="margin-bottom: 1rem;">
                 <label style="font-weight: 600; display:block; margin-bottom: .5rem;" for="categoriaActividad">Categoría</label>
                 <select id="categoriaActividad" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
@@ -150,46 +185,130 @@
             mostrarActividades();
         }
 
-        document.getElementById('formActividad').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const categoria = document.getElementById('categoriaActividad').value;
-            const descripcion = document.getElementById('descripcionActividad').value.trim();
-            const fecha = document.getElementById('fechaActividad').value;
-            const hora = document.getElementById('horaActividad').value;
-            const minutosCaminando = parseInt(document.getElementById('minutosCaminando').value, 10);
-            const minutosInactividad = parseInt(document.getElementById('minutosInactividad').value, 10);
+        document
+    .getElementById('formActividad')
+    .addEventListener('submit', async function(event) {
+        event.preventDefault();
 
-            if (!fecha || !hora) {
-                alert('Por favor completa la fecha y la hora.');
-                return;
+        const habitId = document
+            .getElementById('habitId')
+            .value;
+
+        const categoria = document
+            .getElementById('categoriaActividad')
+            .value;
+
+        const descripcion = document
+            .getElementById('descripcionActividad')
+            .value
+            .trim();
+
+        const fecha = document
+            .getElementById('fechaActividad')
+            .value;
+
+        const hora = document
+            .getElementById('horaActividad')
+            .value;
+
+        const minutosCaminando = Number(
+            document
+                .getElementById('minutosCaminando')
+                .value
+        );
+
+        const minutosInactividad = Number(
+            document
+                .getElementById('minutosInactividad')
+                .value
+        );
+
+        if (!habitId) {
+            alert('No se encontró el hábito de actividad física.');
+            return;
+        }
+
+        if (!fecha || !hora) {
+            alert('Por favor completa la fecha y la hora.');
+            return;
+        }
+
+        if (!minutosCaminando || minutosCaminando <= 0) {
+            alert(
+                'Los minutos caminando deben ser mayores que cero.'
+            );
+            return;
+        }
+
+        const notes = [
+            `Categoría: ${categoria}`,
+            `Descripción: ${descripcion}`,
+            `Hora: ${hora}`,
+            `Inactividad: ${minutosInactividad} minutos`,
+        ].join(' | ');
+
+        try {
+            const response = await fetch(
+                "{% url 'habit_entry_create' %}",
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        habit_id: habitId,
+                        date: fecha,
+                        quantity: minutosCaminando,
+                        completed: true,
+                        notes: notes,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok || data.status !== 'ok') {
+                throw new Error(
+                    data.message ||
+                    'No se pudo registrar la actividad.'
+                );
             }
 
             const actividad = {
-                categoria,
-                descripcion,
-                fecha,
-                hora,
+                categoria: categoria,
+                descripcion: descripcion,
+                fecha: fecha,
+                hora: hora,
                 minutos_caminando: minutosCaminando,
                 minutos_inactividad: minutosInactividad,
             };
 
             const actividades = obtenerActividades();
+
             actividades.push(actividad);
             guardarActividades(actividades);
             mostrarActividades();
 
-            let mensajeAlerta = 'Actividad registrada correctamente.';
-            if (categoria === 'Actividad Física') {
-                mensajeAlerta = 'Alerta: es momento de realizar actividad física. Registra tu rutina y mantén tu movimiento activo.';
-            } else if (categoria === 'Gimnasio') {
-                mensajeAlerta = 'Alerta: es momento de ir al gimnasio. Cuida tu fuerza y tu energía con disciplina.';
-            } else if (categoria === 'Ciclismo') {
-                mensajeAlerta = 'Alerta: es momento de salir a pedalear. Mantén el ritmo y disfruta el movimiento al aire libre.';
-            }
+            alert(
+                data.message +
+                '\nProgreso de actividad física: ' +
+                data.progress.pause_pct +
+                '%'
+            );
 
-            alert(mensajeAlerta);
-            document.getElementById('formActividad').reset();
-        });
+            document
+                .getElementById('formActividad')
+                .reset();
+
+        } catch (error) {
+            console.error(error);
+
+            alert(
+                'Error al registrar la actividad: ' +
+                error.message
+            );
+        }
+    });
 
         function verificarSesion() {
             const usuarioActivo = localStorage.getItem('usuarioSaludYa');
@@ -204,5 +323,6 @@
             mostrarActividades();
         };
     </script>
+</main>
 </body>
 </html>

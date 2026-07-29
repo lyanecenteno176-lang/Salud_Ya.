@@ -1,35 +1,390 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>SaludYa - Configurar Hidratación</title>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SaludYa - Registro de Hidratación</title>
+
     {% load static %}
-    <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
+
+    <link
+        rel="stylesheet"
+        href="{% static 'saludya_app/css/styles.css' %}"
+    >
 </head>
+
 <body style="background-color: var(--bg-light); padding: 3rem 0;">
-    <script>
-        // Bloqueo de seguridad: Verificar si el usuario ha iniciado sesión
-        const usuarioActivo = localStorage.getItem('usuarioSaludYa');
-        if (!usuarioActivo) {
-            alert('Acceso restringido. Por favor, inicia sesión o regístrate presionando "Cuidar de mi hoy" para personalizar tus hábitos.');
-            window.location.href = "{% url 'index' %}"; // Redirige de inmediato al inicio
-        }
-    </script>
-    <div class="container" style="max-width: 600px; background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
-        <h2 style="color: var(--secondary-color); margin-bottom: 1rem;">💧 Ajustes de Hidratación</h2>
-        <p style="margin-bottom: 2rem; color: #666;">Elige cada cuánto tiempo deseas que SaludYa te recuerde beber agua para mantener tu rendimiento óptimo.</p>
-        
-        <form onsubmit="alert('¡Intervalo de hidratación guardado con éxito!'); window.location.href='{% url 'index' %}'; return false;">
-            <div class="form-group" style="margin-bottom: 1.5rem;">
-                <label style="font-weight: 600; display:block; margin-bottom: .5rem;">Frecuencia de las alertas:</label>
-                <select style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
-                    <option value="30">Cada 30 minutos (Ideal si hace mucho calor)</option>
-                    <option value="60">Cada 1 hora (Recomendado para oficina/estudio)</option>
-                    <option value="120">Cada 2 horas</option>
-                </select>
-            </div>
-            <button type="submit" class="btn-main" style="border: none; width: 100%; padding: 1rem; border-radius: 10px; cursor: pointer;">Guardar Configuración</button>
-        </form>
+<nav class="top-nav">
+    <div class="nav-container">
+
+        <a href="{% url 'index' %}" class="nav-logo">
+            🩺 SaludYa
+        </a>
+
+        <div class="nav-links">
+            <a href="{% url 'index' %}">🏠 Inicio</a>
+
+            <a href="{% url 'progreso' %}">
+                📊 Progreso
+            </a>
+
+            <a href="{% url 'historial' %}">
+                📅 Historial
+            </a>
+
+            <a href="{% url 'marketplace' %}">
+                🛒 Marketplace
+            </a>
+
+            <a href="{% url 'perfil' %}">
+                👤 Perfil
+            </a>
+        </div>
+
     </div>
+</nav>  
+<main style="padding-top: 2rem;">
+
+    <div
+        class="container"
+        style="
+            max-width: 650px;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        "
+    >
+
+        <h2
+            style="
+                color: var(--secondary-color);
+                margin-bottom: 1rem;
+            "
+        >
+            💧 Registro de Hidratación
+        </h2>
+
+        <p style="margin-bottom: 1.5rem; color: #666;">
+            Registra la cantidad de agua que has consumido.
+            Cada registro actualizará automáticamente tu panel de progreso.
+        </p>
+
+        <div
+            style="
+                background: var(--bg-light);
+                padding: 1rem;
+                border-radius: 12px;
+                margin-bottom: 1.5rem;
+            "
+        >
+            <p style="margin: 0 0 0.5rem;">
+                <strong>Hábito:</strong>
+                {{ habit.name }}
+            </p>
+
+            <p style="margin: 0;">
+                <strong>Meta diaria:</strong>
+                {{ habit.daily_goal|floatformat:0 }}
+                {{ habit.unit }}
+            </p>
+        </div>
+
+        <form id="formHidratacion">
+
+            {% csrf_token %}
+
+            <div
+                class="form-group"
+                style="margin-bottom: 1.5rem;"
+            >
+                <label
+                    for="cantidadAgua"
+                    style="
+                        font-weight: 600;
+                        display: block;
+                        margin-bottom: 0.5rem;
+                    "
+                >
+                    Cantidad consumida
+                </label>
+
+                <input
+                    type="number"
+                    id="cantidadAgua"
+                    min="0.1"
+                    step="0.1"
+                    placeholder="Ej. 2"
+                    required
+                    style="
+                        width: 100%;
+                        padding: 0.8rem;
+                        border: 2px solid #e0e0e0;
+                        border-radius: 10px;
+                        font-size: 1rem;
+                    "
+                >
+
+                <small
+                    style="
+                        display: block;
+                        margin-top: 0.5rem;
+                        color: #666;
+                    "
+                >
+                    Unidad: {{ habit.unit }}
+                </small>
+            </div>
+
+            <div
+                class="form-group"
+                style="margin-bottom: 1.5rem;"
+            >
+                <label
+                    for="fechaAgua"
+                    style="
+                        font-weight: 600;
+                        display: block;
+                        margin-bottom: 0.5rem;
+                    "
+                >
+                    Fecha
+                </label>
+
+                <input
+                    type="date"
+                    id="fechaAgua"
+                    required
+                    style="
+                        width: 100%;
+                        padding: 0.8rem;
+                        border: 2px solid #e0e0e0;
+                        border-radius: 10px;
+                        font-size: 1rem;
+                    "
+                >
+            </div>
+
+            <div
+                class="form-group"
+                style="margin-bottom: 1.5rem;"
+            >
+                <label
+                    for="notasAgua"
+                    style="
+                        font-weight: 600;
+                        display: block;
+                        margin-bottom: 0.5rem;
+                    "
+                >
+                    Notas opcionales
+                </label>
+
+                <textarea
+                    id="notasAgua"
+                    rows="3"
+                    placeholder="Ej. Tomé agua después de entrenar"
+                    style="
+                        width: 100%;
+                        padding: 0.8rem;
+                        border: 2px solid #e0e0e0;
+                        border-radius: 10px;
+                        font-size: 1rem;
+                        resize: vertical;
+                    "
+                ></textarea>
+            </div>
+
+            <button
+                type="submit"
+                id="btnRegistrarAgua"
+                class="btn-main"
+                style="
+                    border: none;
+                    width: 100%;
+                    padding: 1rem;
+                    border-radius: 10px;
+                    cursor: pointer;
+                "
+            >
+                Registrar consumo de agua
+            </button>
+
+        </form>
+
+        <div
+            id="mensajeResultado"
+            style="
+                display: none;
+                margin-top: 1.5rem;
+                padding: 1rem;
+                border-radius: 10px;
+            "
+        ></div>
+
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <a href="{% url 'progreso' %}">
+                Ver mi progreso
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        const formHidratacion =
+            document.getElementById('formHidratacion');
+
+        const fechaAgua =
+            document.getElementById('fechaAgua');
+
+        const boton =
+            document.getElementById('btnRegistrarAgua');
+
+        const mensaje =
+            document.getElementById('mensajeResultado');
+
+        fechaAgua.value =
+            new Date().toISOString().slice(0, 10);
+
+        function obtenerCsrfToken() {
+            const input = document.querySelector(
+                '[name=csrfmiddlewaretoken]'
+            );
+
+            return input ? input.value : '';
+        }
+
+        function mostrarMensaje(texto, esError = false) {
+            mensaje.style.display = 'block';
+            mensaje.textContent = texto;
+
+            if (esError) {
+                mensaje.style.background = '#ffebee';
+                mensaje.style.color = '#c62828';
+            } else {
+                mensaje.style.background = '#e8f5e9';
+                mensaje.style.color = '#2e7d32';
+            }
+        }
+
+        formHidratacion.addEventListener(
+            'submit',
+            async function (event) {
+                event.preventDefault();
+
+                const cantidad = parseFloat(
+                    document.getElementById(
+                        'cantidadAgua'
+                    ).value
+                );
+
+                const fecha =
+                    fechaAgua.value;
+
+                const notas =
+                    document.getElementById(
+                        'notasAgua'
+                    ).value.trim();
+
+                if (!cantidad || cantidad <= 0) {
+                    mostrarMensaje(
+                        'Ingresa una cantidad válida.',
+                        true
+                    );
+
+                    return;
+                }
+
+                if (!fecha) {
+                    mostrarMensaje(
+                        'Selecciona una fecha.',
+                        true
+                    );
+
+                    return;
+                }
+
+                boton.disabled = true;
+                boton.textContent = 'Registrando...';
+
+                try {
+                    const response = await fetch(
+                        "{% url 'habit_entry_create' %}",
+                        {
+                            method: 'POST',
+
+                            headers: {
+                                'Content-Type':
+                                    'application/json',
+
+                                'X-CSRFToken':
+                                    obtenerCsrfToken()
+                            },
+
+                            body: JSON.stringify({
+                                habit_id: {{ habit.id }},
+                                date: fecha,
+                                quantity: cantidad,
+                                completed: true,
+                                notes: notas
+                            })
+                        }
+                    );
+
+                    const data = await response.json();
+
+                    if (!response.ok || data.status !== 'ok') {
+                        throw new Error(
+                            data.message ||
+                            'No se pudo registrar el consumo.'
+                        );
+                    }
+
+                    let texto =
+                        data.message ||
+                        'Consumo registrado correctamente.';
+
+                    if (data.progress) {
+                        texto +=
+                            ' Progreso de hidratación: ' +
+                            data.progress.hydration_pct +
+                            ' %.';
+                    }
+
+                    mostrarMensaje(texto);
+
+                    document.getElementById(
+                        'cantidadAgua'
+                    ).value = '';
+
+                    document.getElementById(
+                        'notasAgua'
+                    ).value = '';
+
+                } catch (error) {
+                    console.error(error);
+
+                    mostrarMensaje(
+                        error.message ||
+                        'Ocurrió un error al registrar el consumo.',
+                        true
+                    );
+
+                } finally {
+                    boton.disabled = false;
+
+                    boton.textContent =
+                        'Registrar consumo de agua';
+                }
+            }
+        );
+    </script>
+</main>
 </body>
 </html>

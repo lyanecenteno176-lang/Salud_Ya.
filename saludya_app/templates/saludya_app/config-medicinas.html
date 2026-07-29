@@ -7,6 +7,36 @@
     <link rel="stylesheet" href="{% static 'saludya_app/css/styles.css' %}">
 </head>
 <body style="background-color: var(--bg-light); padding: 3rem 0;">
+<nav class="top-nav">
+    <div class="nav-container">
+
+        <a href="{% url 'index' %}" class="nav-logo">
+            🩺 SaludYa
+        </a>
+
+        <div class="nav-links">
+            <a href="{% url 'index' %}">🏠 Inicio</a>
+
+            <a href="{% url 'progreso' %}">
+                📊 Progreso
+            </a>
+
+            <a href="{% url 'historial' %}">
+                📅 Historial
+            </a>
+
+            <a href="{% url 'marketplace' %}">
+                🛒 Marketplace
+            </a>
+
+            <a href="{% url 'perfil' %}">
+                👤 Perfil
+            </a>
+        </div>
+
+    </div>
+</nav>
+<main style="padding-top: 2rem;">
     <script>
         // Bloqueo de seguridad: Verificar si el usuario ha iniciado sesión
         const usuarioActivo = localStorage.getItem('usuarioSaludYa');
@@ -55,6 +85,11 @@
         </div>
 
         <form id="formMedicacion">
+           <input
+                type="hidden"
+                id="habitId"
+                value="{{ habit.id }}"
+            >
             <div class="form-group" style="margin-bottom: 1.2rem;">
                 <label style="font-weight: 600; display:block; margin-bottom: .4rem;" for="medicamentoNombre">Nombre del Medicamento</label>
                 <input type="text" id="medicamentoNombre" placeholder="Ej. Paracetamol" required style="width: 100%; padding: .8rem; border: 2px solid #e0e0e0; border-radius: 10px;">
@@ -135,28 +170,109 @@
             mostrarMedicacion();
         }
 
-        document.getElementById('formMedicacion').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const nombre = document.getElementById('medicamentoNombre').value.trim();
-            const dosis = document.getElementById('medicamentoDosis').value.trim();
-            const fecha = document.getElementById('fechaMedicacion').value;
-            const hora = document.getElementById('horaMedicacion').value;
+        document
+    .getElementById('formMedicacion')
+    .addEventListener('submit', async function(event) {
+        event.preventDefault();
 
-            if (!fecha || !hora) {
-                alert('Por favor completa la fecha y la hora del recordatorio.');
-                return;
+        const habitId = document
+            .getElementById('habitId')
+            .value;
+
+        const nombre = document
+            .getElementById('medicamentoNombre')
+            .value
+            .trim();
+
+        const dosis = document
+            .getElementById('medicamentoDosis')
+            .value
+            .trim();
+
+        const fecha = document
+            .getElementById('fechaMedicacion')
+            .value;
+
+        const hora = document
+            .getElementById('horaMedicacion')
+            .value;
+
+        if (!habitId) {
+            alert('No se encontró el hábito de medicación.');
+            return;
+        }
+
+        if (!nombre || !dosis || !fecha || !hora) {
+            alert('Completa todos los campos del medicamento.');
+            return;
+        }
+
+        const notes = [
+            `Medicamento: ${nombre}`,
+            `Dosis: ${dosis}`,
+            `Hora: ${hora}`,
+        ].join(' | ');
+
+        try {
+            const response = await fetch(
+                "{% url 'habit_entry_create' %}",
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        habit_id: habitId,
+                        date: fecha,
+                        quantity: 1,
+                        completed: true,
+                        notes: notes,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok || data.status !== 'ok') {
+                throw new Error(
+                    data.message ||
+                    'No se pudo registrar el medicamento.'
+                );
             }
 
-            const recordatorio = { nombre, dosis, fecha, hora };
+            const recordatorio = {
+                nombre: nombre,
+                dosis: dosis,
+                fecha: fecha,
+                hora: hora,
+            };
+
             const records = obtenerMedicacion();
+
             records.push(recordatorio);
             guardarMedicacion(records);
             mostrarMedicacion();
 
-            alert('Recordatorio de medicación guardado. SaludYa te avisará en la fecha y hora programadas.');
-            document.getElementById('formMedicacion').reset();
-        });
+            alert(
+                data.message +
+                '\nProgreso de medicación: ' +
+                data.progress.medication_pct +
+                '%'
+            );
 
+            document
+                .getElementById('formMedicacion')
+                .reset();
+
+        } catch (error) {
+            console.error(error);
+
+            alert(
+                'Error al registrar el medicamento: ' +
+                error.message
+            );
+        }
+    });
         function verificarSesion() {
             const usuarioActivo = localStorage.getItem('usuarioSaludYa');
             if (!usuarioActivo) {
@@ -170,5 +286,6 @@
             mostrarMedicacion();
         };
     </script>
+</main>
 </body>
 </html>
