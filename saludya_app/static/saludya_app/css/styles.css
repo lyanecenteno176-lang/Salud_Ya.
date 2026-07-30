@@ -443,9 +443,6 @@ section {
     transform: translateY(-1px);
 }
 
-.logo span {
-    color: var(--primary-color);
-}
 
 .logo img {
     width: auto;
@@ -3934,4 +3931,49 @@ a,
 
 .nav-links a:hover{
     color:#2ec4b6;
+}
+
+.login-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.login-logo {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    display: block;
+}
+
+.login-brand h2 {
+    margin: 0;
+    text-align: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.navbar-logo {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.logo-text {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #00173A;
+    line-height: 1;
+}
+
+.logo-accent {
+    color: #00173A;
 }

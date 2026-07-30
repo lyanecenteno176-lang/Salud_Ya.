@@ -30,7 +30,16 @@
 
     <div class="login-card">
 
-        <h2>Bienvenido a SaludYa</h2>
+        <div class="login-brand">
+
+    <img
+        src="{% static 'saludya_app/images/logo.jpg' %}"
+        alt="Logo de SaludYa"
+        class="login-logo">
+
+    <h2>Bienvenido a SaludYa</h2>
+
+</div>
 
         <p>
 
@@ -93,11 +102,20 @@
 
 <div class="container header-container">
 
-<a
-class="logo"
-href="{% url 'index' %}">
+<a class="logo" href="{% url 'index' %}">
 
-Salud<span>Ya</span>
+    <img
+        src="{% static 'saludya_app/images/logo.jpg' %}"
+        alt="Logo de SaludYa"
+        class="navbar-logo">
+
+    <span
+        class="logo-text"
+        style="color: #00173A !important;">
+
+        Salud<span style="color: #00173A !important;">Ya</span>
+
+    </span>
 
 </a>
 
@@ -826,7 +844,7 @@ Explorar Marketplace
 
     <div class="container">
 
-        <h2 style="margin-bottom:20px;">
+        <h2 style="margin-bottom:20px; color:#ffffff;">
 
             Salud<span style="color:#2ec4b6;">Ya</span>
 
